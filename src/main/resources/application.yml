@@ -1,0 +1,14 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: hotSearch # 项目名
+
+  datasource:
+    url: jdbc:mysql://81.69.46.160:3306/parking         #本地数据库
+    username: root
+    password: lanlan1212!@#
+    hikari:
+      max-lifetime:600000
+
