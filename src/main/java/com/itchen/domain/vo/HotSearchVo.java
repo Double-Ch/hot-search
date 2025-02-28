@@ -16,21 +16,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class HotSearchVo {
-    @Schema(description = "热搜ID")
-    private Integer htoId;
+//    @Schema(description = "热搜ID")
+//    private Integer htoId;
+
+    @Schema(description = "热搜排名")
+    private Integer hotRank;
 
     @Schema(description = "热搜值")
     private Integer hotValue;
 
-    @Schema(description = "热搜图片")
-    private String hotTagImg;
+    @Schema(description = "热搜标题")
+    private String hotTitle;
 
     @Schema(description = "热搜链接")
     private String hotUrl;
 
-    @Schema(description = "热搜标题")
-    private String hotTitle;
-
-    @Schema(description = "热搜排名")
-    private String hotRank;
+    @Schema(description = "热搜图片")
+    private String hotTagImg;
 }

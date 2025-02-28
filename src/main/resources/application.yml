@@ -10,5 +10,19 @@ spring:
     username: root
     password: lanlan1212!@#
     hikari:
-      max-lifetime:600000
+      maximum-pool-size: 20
+      connection-timeout: 3000
+      idle-timeout: 600000
 
+# mybatis打印日志
+logging:
+  level:
+    com:
+      itchen:
+        hospital:
+          mapper: info
+# 在Mybatis-Plus配置中增加
+mybatis-plus:
+  global-config:
+    db-config:
+      batch-size: 1000

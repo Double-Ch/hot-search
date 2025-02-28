@@ -31,7 +31,13 @@ public class Platform {
     private String apiUrl;
 
     @Schema(description = "携带参数")
-    private String params;
+    private String apiParams;
+
+    @Schema(description = "访问热点的API地址,跳转地址")
+    private String visitUrl;
+
+    @Schema(description = "携带参数")
+    private String visitParams;
 
 //    @Schema(description = "热搜数据列表")
 //    private List<HotSearchItem> hotSearchItems;
