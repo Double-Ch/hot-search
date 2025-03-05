@@ -1,4 +1,4 @@
-package com.itchen.domain;
+package com.itchen.domain.entity;
 
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * @author chen
@@ -41,8 +43,8 @@ public class HotSearchItem {
     private String hotValue;
 
     @Schema(description = "更新时间")
-    private DateTime updateTime;
+    private LocalDateTime updateTime;
 
-    @Schema(description = "所属平台")
-    private Platform platform;
+//    @Schema(description = "所属平台")
+//    private Platform platform;
 }

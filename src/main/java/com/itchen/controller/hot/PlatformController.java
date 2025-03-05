@@ -1,6 +1,6 @@
-package com.itchen.controller;
+package com.itchen.controller.hot;
 
-import com.itchen.domain.Platform;
+import com.itchen.domain.entity.Platform;
 import com.itchen.service.PlatformService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,12 +22,14 @@ public class PlatformController {
         return platformService.list();
     }
 
-    @PostMapping
+    @PostMapping("save")
+    @Operation(summary = "新增平台")
     public void addPlatform(@RequestBody Platform platform) {
         platformService.save(platform);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("deleteById/{id}")
+    @Operation(summary = "根据id删除对应平台")
     public void deletePlatform(@PathVariable Long id) {
         platformService.removeById(id);
     }

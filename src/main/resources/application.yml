@@ -14,15 +14,16 @@ spring:
       connection-timeout: 3000
       idle-timeout: 600000
 
-# mybatis打印日志
-logging:
-  level:
-    com:
-      itchen:
-        hospital:
-          mapper: info
-# 在Mybatis-Plus配置中增加
 mybatis-plus:
-  global-config:
+#  mapper-locations: classpath*:/**/mapper/**/*.xml
+#  type-aliases-package: com.itchen.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 打印SQL日志
+    use-default-exception: true
+  global-config: # 全局配置，数据库配置
     db-config:
+      id-type: auto    # 主键id生成策略，auto，根据数据库类型自动选择
+#      field-strategy: not_empty    # 字段填充策略，not_empty 表示只有当字段不为空时，才会进行字段填充
+#      logic-delete-value: 1        # 逻辑删除值
+#      logic-not-delete-value: 0    # 逻辑未删除值
       batch-size: 1000

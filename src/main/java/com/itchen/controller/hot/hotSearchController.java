@@ -1,4 +1,4 @@
-package com.itchen.controller;
+package com.itchen.controller.hot;
 
 import com.itchen.common.Result;
 import com.itchen.domain.vo.HotSearchVo;
@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@Tag(name = "热搜数据管理")
+@Tag(name = "热搜数据-拉取管理")
 @RequestMapping("/hotSearch")
 public class hotSearchController {
 

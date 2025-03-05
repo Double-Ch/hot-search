@@ -1,6 +1,6 @@
-package com.itchen.controller;
+package com.itchen.controller.hot;
 
-import com.itchen.domain.HotSearchItem;
+import com.itchen.domain.entity.HotSearchItem;
 import com.itchen.service.HotSearchItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

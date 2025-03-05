@@ -9,6 +9,9 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * knife4j配置
+ */
 @Configuration
 public class Knife4jConfig {
     @Bean
@@ -23,7 +26,7 @@ public class Knife4jConfig {
     public OpenAPI openAPI(){
         return new OpenAPI()
                 .info(new Info()
-                        .title("热点一览-调试")
+                        .title("热点导航-调试")
                         .description("Knife4j说明")
                         .version("v1")
                         .contact(new Contact().name("chen").email("robin@gmail.com"))

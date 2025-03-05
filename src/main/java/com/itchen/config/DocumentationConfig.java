@@ -10,10 +10,6 @@ import java.net.UnknownHostException;
 
 /**
  * @Classname DocumentationConfig
- * @Description TODO
- * @Version 1.0.0
- * @Date 2024/6/11 15:28
- * @Created by Administrator
  */
 
 @Configuration
