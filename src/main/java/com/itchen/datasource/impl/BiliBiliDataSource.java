@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.itchen.constant.HotConstant.BILI_BILI_ICON;
+
 /**
  * @author chen
  * @description bilibili数据源
@@ -63,29 +65,40 @@ public class BiliBiliDataSource implements HotDataSource {
                     .body();
 
             // 获取嵌套数据结构
-            JSONObject body = new JSONObject(response);
-            JSONObject data = new JSONObject(body.get("data"));
-            JSONArray list = data.getJSONArray("list");
+            List<HotSearchVo> hotSearchVoList = null;
+            try {
+                JSONObject body = new JSONObject(response);
+                JSONObject data = new JSONObject(body.get("data"));
+                JSONArray list = data.getJSONArray("list");
 
-            HotSearchVo hotSearchVo;
-            List<HotSearchVo> hotSearchVoList = new ArrayList<>(list.size());
+                HotSearchVo hotSearchVo;
+                hotSearchVoList = new ArrayList<>(list.size());
 
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject item = list.getJSONObject(i);
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject item = list.getJSONObject(i);
 
-                JSONObject stat = new JSONObject(item.get("stat"));
+                    JSONObject stat = new JSONObject(item.get("stat"));
 
-                hotSearchVo = new HotSearchVo().builder()
-                        .hotTitle(item.getStr("title"))
-                        .hotRank(i + 1)
-                        .hotTagImg(item.getStr("pic"))
-                        .hotValue((Integer) stat.get("view"))
-                        .hotUrl((String) item.get("short_link_v2"))
-                        .build();
-                hotSearchVoList.add(hotSearchVo);
+                    hotSearchVo = new HotSearchVo().builder()
+                            .hotTitle(item.getStr("title"))
+                            .hotRank(i + 1)
+                            .hotTagImg(item.getStr("pic"))
+                            .hotValue((Integer) stat.get("view"))
+                            .hotUrl((String) item.get("short_link_v2"))
+                            .iconUrl(BILI_BILI_ICON)
+                            .build();
+                    hotSearchVoList.add(hotSearchVo);
+                }
+            } catch (Exception e) {
+                log.error("数据解析失败,{}", response);
+                throw new CustomException("数据解析失败");
             }
             return hotSearchVoList;
         } catch (HttpException e) {
+            log.error("请求url失败,{}", platform.getApiUrl() + "?" + platform.getApiParams());
+            throw new CustomException(ErrorCode.SYSTEM_ERROR, "请求url失败");
+        } catch (Exception e) {
+            log.error("未知错误", e);
             throw new CustomException(ErrorCode.SYSTEM_ERROR);
         }
     }

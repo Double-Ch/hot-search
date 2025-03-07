@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.itchen.constant.HotConstant.ZHI_HU_ICON;
+
 /**
  * @author chen
  * @description 知乎数据源
@@ -94,6 +96,7 @@ public class ZhiHuDataSource implements HotDataSource {
                         .hotTagImg(thumbnail)
                         .hotValue(Integer.parseInt(detailText))
                         .hotUrl(url)
+                        .iconUrl(ZHI_HU_ICON)
                         .build();
                 hotSearchVoList.add(hotSearchVo);
             }

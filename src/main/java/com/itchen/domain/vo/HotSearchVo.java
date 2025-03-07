@@ -31,6 +31,9 @@ public class HotSearchVo {
     @Schema(description = "热搜链接")
     private String hotUrl;
 
+    @Schema(description = "平台图标")
+    private String iconUrl;
+
     @Schema(description = "热搜图片")
     private String hotTagImg;
 }

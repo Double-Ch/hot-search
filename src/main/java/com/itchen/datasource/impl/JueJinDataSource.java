@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.itchen.constant.HotConstant.JUE_JIN_ICON;
+
 /**
  * @author chen
  * @description 掘金数据源
@@ -61,26 +63,37 @@ public class JueJinDataSource implements HotDataSource {
                     .body();
 
             // 获取嵌套数据结构
-            JSONObject body = new JSONObject(response);
-            JSONArray list = body.getJSONArray("data");
+            List<HotSearchVo> hotSearchVoList = null;
+            try {
+                JSONObject body = new JSONObject(response);
+                JSONArray list = body.getJSONArray("data");
 
-            HotSearchVo hotSearchVo;
-            List<HotSearchVo> hotSearchVoList = new ArrayList<>(list.size());
+                HotSearchVo hotSearchVo;
+                hotSearchVoList = new ArrayList<>(list.size());
 
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject item = list.getJSONObject(i);
-                JSONObject content = item.getJSONObject("content");
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject item = list.getJSONObject(i);
+                    JSONObject content = item.getJSONObject("content");
 
-                hotSearchVo = new HotSearchVo().builder()
-                        .hotTitle(content.getStr("title"))
-                        .hotRank(i + 1)
-                        .hotValue(item.getJSONObject("content_counter").getInt("hot_rank"))
-                        .hotUrl("https://juejin.cn/post/" + content.getStr("content_id"))
-                        .build();
-                hotSearchVoList.add(hotSearchVo);
+                    hotSearchVo = new HotSearchVo().builder()
+                            .hotTitle(content.getStr("title"))
+                            .hotRank(i + 1)
+                            .hotValue(item.getJSONObject("content_counter").getInt("hot_rank"))
+                            .hotUrl("https://juejin.cn/post/" + content.getStr("content_id"))
+                            .iconUrl(JUE_JIN_ICON)
+                            .build();
+                    hotSearchVoList.add(hotSearchVo);
+                }
+            } catch (Exception e) {
+                log.error("数据解析失败,{}", response);
+                throw new CustomException("数据解析失败");
             }
             return hotSearchVoList;
         } catch (HttpException e) {
+            log.error("请求url失败,{}", platform.getApiUrl() + "?" + platform.getApiParams());
+            throw new CustomException(ErrorCode.SYSTEM_ERROR, "请求url失败");
+        } catch (Exception e) {
+            log.error("未知错误", e);
             throw new CustomException(ErrorCode.SYSTEM_ERROR);
         }
     }

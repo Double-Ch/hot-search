@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.itchen.constant.HotConstant.TOU_TIAO_ICON;
+
 /**
  * @author chen
  * @description 头条数据源
@@ -62,29 +64,40 @@ public class TouTiaoDataSource implements HotDataSource {
                     .body();
 
             // 获取嵌套数据结构
-            JSONObject body = new JSONObject(response);
-            JSONArray list = body.getJSONArray("data");
+            List<HotSearchVo> hotSearchVoList = null;
+            try {
+                JSONObject body = new JSONObject(response);
+                JSONArray list = body.getJSONArray("data");
 
-            HotSearchVo hotSearchVo;
-            List<HotSearchVo> hotSearchVoList = new ArrayList<>(list.size());
+                HotSearchVo hotSearchVo;
+                hotSearchVoList = new ArrayList<>(list.size());
 
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject item = list.getJSONObject(i);
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject item = list.getJSONObject(i);
 
-                JSONObject imageObj = new JSONObject(item.get("Image"));
-                String tagImg = imageObj.getStr("url");
+                    JSONObject imageObj = new JSONObject(item.get("Image"));
+                    String tagImg = imageObj.getStr("url");
 
-                hotSearchVo = new HotSearchVo().builder()
-                        .hotTitle(item.getStr("Title"))
-                        .hotRank(i + 1)
-                        .hotTagImg(tagImg)
-                        .hotValue(item.getInt("HotValue"))
-                        .hotUrl(item.getStr("Url"))
-                        .build();
-                hotSearchVoList.add(hotSearchVo);
+                    hotSearchVo = new HotSearchVo().builder()
+                            .hotTitle(item.getStr("Title"))
+                            .hotRank(i + 1)
+                            .hotTagImg(tagImg)
+                            .hotValue(item.getInt("HotValue"))
+                            .hotUrl(item.getStr("Url"))
+                            .iconUrl(TOU_TIAO_ICON)
+                            .build();
+                    hotSearchVoList.add(hotSearchVo);
+                }
+            } catch (Exception e) {
+                log.error("数据解析失败,{}", response);
+                throw new CustomException("数据解析失败");
             }
             return hotSearchVoList;
         } catch (HttpException e) {
+            log.error("请求url失败,{}", platform.getApiUrl() + "?" + platform.getApiParams());
+            throw new CustomException(ErrorCode.SYSTEM_ERROR, "请求url失败");
+        } catch (Exception e) {
+            log.error("未知错误", e);
             throw new CustomException(ErrorCode.SYSTEM_ERROR);
         }
     }

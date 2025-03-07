@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.itchen.constant.HotConstant.BAI_DU_ICON;
+
 /**
  * @author chen
  * @description baidu数据源
@@ -61,32 +63,40 @@ public class BaiDuDataSource implements HotDataSource {
                     .body();
 
             // 获取嵌套数据结构
-            JSONObject body = new JSONObject(response);
-            JSONObject data = new JSONObject(body.get("data"));
-            JSONArray cards = data.getJSONArray("cards");
-            JSONObject jsonObject = cards.getJSONObject(0);
-            JSONArray list = jsonObject.getJSONArray("content");
+            List<HotSearchVo> hotSearchVoList = null;
+            try {
+                JSONObject body = new JSONObject(response);
+                JSONObject data = new JSONObject(body.get("data"));
+                JSONArray cards = data.getJSONArray("cards");
+                JSONObject jsonObject = cards.getJSONObject(0);
+                JSONArray list = jsonObject.getJSONArray("content");
 
-            HotSearchVo hotSearchVo;
-            List<HotSearchVo> hotSearchVoList = new ArrayList<>(list.size());
+                HotSearchVo hotSearchVo;
+                hotSearchVoList = new ArrayList<>(list.size());
 
-            for (int i = 0; i < list.size(); i++) {
-                JSONObject item = list.getJSONObject(i);
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject item = list.getJSONObject(i);
 
-                JSONObject imageObj = new JSONObject(item.get("Image"));
-                String tagImg = imageObj.getStr("url");
-
-                hotSearchVo = new HotSearchVo().builder()
-                        .hotTitle(item.getStr("word"))
-                        .hotRank(i + 1)
-                        .hotTagImg(item.getStr("img"))
-                        .hotValue(item.getInt("hotScore"))
-                        .hotUrl(item.getStr("url"))
-                        .build();
-                hotSearchVoList.add(hotSearchVo);
+                    hotSearchVo = new HotSearchVo().builder()
+                            .hotTitle(item.getStr("word"))
+                            .hotRank(i + 1)
+                            .hotTagImg(item.getStr("img"))
+                            .hotValue(item.getInt("hotScore"))
+                            .hotUrl(item.getStr("url"))
+                            .iconUrl(BAI_DU_ICON)
+                            .build();
+                    hotSearchVoList.add(hotSearchVo);
+                }
+            } catch (Exception e) {
+                log.error("数据解析失败,{}", response);
+                throw new CustomException("数据解析失败");
             }
             return hotSearchVoList;
         } catch (HttpException e) {
+            log.error("请求url失败,{}", platform.getApiUrl() + "?" + platform.getApiParams());
+            throw new CustomException(ErrorCode.SYSTEM_ERROR, "请求url失败");
+        } catch (Exception e) {
+            log.error("未知错误", e);
             throw new CustomException(ErrorCode.SYSTEM_ERROR);
         }
     }
