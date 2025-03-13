@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热点导航</title>
+    <link rel="icon" href="./icon/favicon.png">
+    <link rel="stylesheet" href="index.css">
+
+        <!-- 引入element-ui样式 -->
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <!-- 引入element-ui组件库 -->
+        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+        <!-- 引入axios -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <!-- 引入 Vue -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+
+</head>
+
+<body>
+    <!-- 创建一个根元素 -->
+    <div class="home" id="home">
+        <header>
+            <div class="search-box">
+                <input type="text" placeholder="搜索">
+                <span class="search-icon">🔍</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="list-wrapper">
+                <div class="hot-list-card" v-for="(platform, index) in platforms" :key="index">
+                    <div class="list-header">
+                        <div class="logo" :class="platform.logoClass"></div>
+                        <span class="list-title">{{ platform.name }}</span>
+                    </div>
+                    <div class="list-content">
+                        <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
+                            <span class="rank">{{ item.hotRank }}</span>
+                            <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
+                                {{ item.hotTitle.length > 30 ? item.hotTitle.substring(0, 30) + '...' : item.hotTitle }}
+                            </a>
+                            <span class="score">{{ item.hotValue }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            vm.init();
+        }
+
+        // 将vue挂载到id为home的根元素上
+        const vm = new Vue({
+            el: '#home',
+            data: {
+                platforms: [
+                    { name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu' },
+                    { name: '抖音热榜', logoClass: 'douyin-logo', hotList: [], type: 'douyin' },
+                    { name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu' },
+                    { name: 'B站热榜', logoClass: 'bilibili-logo', hotList: [], type: 'bilibili' },
+                    { name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin' },
+                    { name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang' },
+                    { name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba' },
+                    { name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao' }
+                ]
+            },
+            methods: {
+                init() {
+                    this.platforms.forEach(platform => {
+                        this.loadPlatformData(platform);
+                    });
+                },
+                loadPlatformData(platform) {
+                    axios.get(`http://localhost:8089/hotSearch/queryByType/${platform.type}`)
+                        .then(response => {
+                            platform.hotList = response.data.data;
+                            console.log(`${platform.name} 数据:`, response.data.data);
+                        })
+                        .catch(error => {
+                            console.error(`获取${platform.name}数据失败`, error);
+                        });
+                }
+            }
+        });
+    </script>
+</body>
+</html>

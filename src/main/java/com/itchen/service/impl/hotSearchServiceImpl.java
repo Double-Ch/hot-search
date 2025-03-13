@@ -35,7 +35,7 @@ public class hotSearchServiceImpl extends ServiceImpl<hotSearchMapper, HotSearch
             HotDataSource dataSource = dataSourceFactory.getDataSource(type);
             return dataSource.getHotSearch(type);
         } catch (Exception e) {
-            throw new CustomException(ErrorCode.SYSTEM_ERROR, "获取平台信息失败");
+            throw new CustomException(ErrorCode.SYSTEM_ERROR, e.getMessage());
         }
     }
 }
