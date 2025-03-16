@@ -8,6 +8,7 @@
 body {
     padding: 20px;
     background-color: #f5f5f5;
+    transition: background-color 0.5s ease; /* 添加背景色过渡动画 */
 }
 
 header {
@@ -15,6 +16,106 @@ header {
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
+}
+
+.time-display {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease, color 0.5s ease; /* 添加过渡动画 */
+}
+
+.time-display span {
+    margin-right: 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+.theme-toggle {
+    position: absolute;
+    right: 20px; /* 靠近浏览器侧边 */
+    top: 20px; /* 与时间显示对齐 */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px; /* 图标大小 */
+}
+
+.theme-toggle:focus {
+    outline: none;
+}
+
+.dark-theme {
+    background-color: #000;
+    color: #fff;
+}
+
+.dark-theme .time-display {
+    background-color: #171717;
+    color: #fff;
+}
+
+.dark-theme .time-display span {
+    color: #fff;
+}
+
+/* 暗色主题样式扩展 */
+.dark-theme .hot-list-card {
+    background-color: #171717; /* 热榜框背景颜色 */
+}
+
+.dark-theme .list-title {
+    color: #fff; /* 热榜平台名称文字颜色 */
+}
+
+.dark-theme .item-title {
+    color: #b0b0b0; /* 热榜项标题文字颜色 */
+}
+
+.dark-theme .score {
+    color: #999; /* 热榜项热度值文字颜色 */
+}
+
+.dark-theme .rank {
+    color: #ff6b6b; /* 热榜项排名文字颜色 */
+}
+
+.dark-theme .list-item:hover {
+    color: skyblue; /* 热榜项悬停文字颜色 */
+}
+
+.dark-theme ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #171717; /* 滚动条背景颜色 */
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+    background-color: #333; /* 滚动条滑块颜色 */
+    border-radius: 4px;
+}
+
+.dark-theme ::-webkit-scrollbar-track {
+    background-color: #171717; /* 滚动条轨道颜色 */
+}
+
+/* 浅色主题下拉条样式 */
+.light-theme ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #f5f5f5; /* 滚动条背景颜色 */
+}
+
+.light-theme ::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* 滚动条滑块颜色 */
+    border-radius: 4px;
+}
+
+.light-theme ::-webkit-scrollbar-track {
+    background-color: #f5f5f5; /* 滚动条轨道颜色 */
 }
 
 .search-box {
@@ -57,7 +158,7 @@ header {
     height: 450px;
     /* 固定热榜框的高度 */
     overflow: hidden;
-    transition: box-shadow 0.3s ease;
+    transition: box-shadow 0.3s ease, background-color 0.5s ease; /* 添加背景色过渡动画 */
 }
 
 .hot-list-card:hover {
@@ -70,6 +171,7 @@ header {
     align-items: center;
     padding: 10px 15px;
     border-bottom: 1px solid #f0f0f0;
+    transition: border-color 0.5s ease; /* 添加边框色过渡动画 */
 }
 
 .logo {
@@ -115,6 +217,7 @@ header {
 .list-title {
     font-weight: bold;
     font-size: 16px;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
 }
 
 .update-time {
@@ -137,7 +240,7 @@ header {
     padding: 8px 0;
     color: #5e5d5d;
     border-bottom: 1px solid #f0f0f0;
-    transition: color 0.3s ease;
+    transition: color 0.5s ease, border-color 0.5s ease; /* 添加颜色和边框色过渡动画 */
 }
 
 .list-item:hover {
@@ -149,6 +252,7 @@ header {
     margin-right: 10px;
     font-weight: bold;
     color: #ff6b6b;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
 }
 
 .item-title {
@@ -164,7 +268,8 @@ header {
 .score {
     margin-left: 10px;
     color: #999;
-    font-size: 14px;
+    font-size: 12px;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
 }
 
 @media (max-width: 1200px) {

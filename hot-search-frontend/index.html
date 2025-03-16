@@ -8,86 +8,141 @@
     <link rel="icon" href="./icon/favicon.png">
     <link rel="stylesheet" href="index.css">
 
-        <!-- 引入element-ui样式 -->
-        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-        <!-- 引入element-ui组件库 -->
-        <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-        <!-- 引入axios -->
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <!-- 引入 Vue -->
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入element-ui样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入element-ui组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!-- 引入axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 引入 Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
 </head>
 
 <body>
-    <!-- 创建一个根元素 -->
-    <div class="home" id="home">
-        <header>
-            <div class="search-box">
-                <input type="text" placeholder="搜索">
-                <span class="search-icon">🔍</span>
-            </div>
-        </header>
+<!-- 创建一个根元素 -->
+<div class="home" id="home">
+    <header>
+        <div class="time-display">
+            <span id="beijing-time"></span>
+            <span id="week-day"></span>
+        </div>
+        <!--切换主题-->
+        <button id="theme-toggle" class="theme-toggle">
+            <span id="theme-icon" @click="toggleTheme">🌞</span> <!-- 默认显示太阳图标 -->
+        </button>
+    </header>
 
-        <div class="container">
-            <div class="list-wrapper">
-                <div class="hot-list-card" v-for="(platform, index) in platforms" :key="index">
-                    <div class="list-header">
-                        <div class="logo" :class="platform.logoClass"></div>
-                        <span class="list-title">{{ platform.name }}</span>
-                    </div>
-                    <div class="list-content">
-                        <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
-                            <span class="rank">{{ item.hotRank }}</span>
-                            <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
-                                {{ item.hotTitle.length > 30 ? item.hotTitle.substring(0, 30) + '...' : item.hotTitle }}
-                            </a>
-                            <span class="score">{{ item.hotValue }}</span>
-                        </div>
+    <div class="container">
+        <div class="list-wrapper">
+            <div class="hot-list-card" v-for="(platform, index) in platforms" :key="index">
+                <div class="list-header">
+                    <div class="logo" :class="platform.logoClass"></div>
+                    <span class="list-title">{{ platform.name }}</span>
+                </div>
+                <div class="list-content">
+                    <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
+                        <span class="rank">{{ item.hotRank }}</span>
+                        <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
+                            {{ item.hotTitle.length > 30 ? item.hotTitle.substring(0, 30) + '...' : item.hotTitle }}
+                        </a>
+                        <span class="score">{{ formatHotValue(item.hotValue) }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        window.onload = function () {
-            vm.init();
+<script>
+    window.onload = function () {
+        vm.init();
+        updateTime();
+        setInterval(updateTime, 1000);
+        // 页面加载时检查本地存储的主题设置
+        checkLocalStorageTheme();
+    }
+
+    function updateTime() {
+        const now = new Date();
+        const beijingTime = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+        document.getElementById('beijing-time').textContent = `${beijingTime}`;
+
+        const weekDay = now.toLocaleString('zh-CN', { weekday: 'long' });
+        document.getElementById('week-day').textContent = `${weekDay}`;
+    }
+
+    function checkLocalStorageTheme() {
+        const savedTheme = localStorage.getItem('appTheme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('theme-icon').textContent = '🌙';
         }
+    }
 
-        // 将vue挂载到id为home的根元素上
-        const vm = new Vue({
-            el: '#home',
-            data: {
-                platforms: [
-                    { name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu' },
-                    { name: '抖音热榜', logoClass: 'douyin-logo', hotList: [], type: 'douyin' },
-                    { name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu' },
-                    { name: 'B站热榜', logoClass: 'bilibili-logo', hotList: [], type: 'bilibili' },
-                    { name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin' },
-                    { name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang' },
-                    { name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba' },
-                    { name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao' }
-                ]
+    // 将vue挂载到id为home的根元素上
+    const vm = new Vue({
+        el: '#home',
+        data: {
+            platforms: [
+                { name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu' },
+                { name: '抖音热榜', logoClass: 'douyin-logo', hotList: [], type: 'douyin' },
+                { name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu' },
+                { name: 'B站热榜', logoClass: 'bilibili-logo', hotList: [], type: 'bilibili' },
+                { name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin' },
+                { name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang' },
+                { name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba' },
+                { name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao' }
+            ]
+        },
+        methods: {
+            // 初始化函数
+            init() {
+                this.platforms.forEach(platform => {
+                    this.loadPlatformData(platform);
+                });
             },
-            methods: {
-                init() {
-                    this.platforms.forEach(platform => {
-                        this.loadPlatformData(platform);
+
+            // 获取热榜数据
+            loadPlatformData(platform) {
+                axios.get(`http://localhost:8089/hotSearch/queryByType/${platform.type}`)
+                    .then(response => {
+                        platform.hotList = response.data.data;
+                        console.log(`${platform.name} 数据:`, response.data.data);
+                    })
+                    .catch(error => {
+                        console.error(`获取${platform.name}数据失败`, error);
                     });
-                },
-                loadPlatformData(platform) {
-                    axios.get(`http://localhost:8089/hotSearch/queryByType/${platform.type}`)
-                        .then(response => {
-                            platform.hotList = response.data.data;
-                            console.log(`${platform.name} 数据:`, response.data.data);
-                        })
-                        .catch(error => {
-                            console.error(`获取${platform.name}数据失败`, error);
-                        });
+            },
+
+            // 格式化热榜值
+            formatHotValue(value) {
+                if (value > 10000) {
+                    return (value / 10000).toFixed(1) + '万';
                 }
-            }
-        });
-    </script>
+                return value;
+            },
+
+            // 切换主题
+            toggleTheme() {
+                const that = this;
+                const body = document.body;
+                const themeIcon = document.getElementById('theme-icon');
+
+                if (body.classList.contains('dark-theme')) {
+                    body.classList.remove('dark-theme');
+                    themeIcon.textContent = '🌞'; // 切换到太阳图标
+                    // 保存主题设置到本地存储
+                    localStorage.setItem('appTheme', 'light');
+                } else {
+                    body.classList.add('dark-theme');
+                    themeIcon.textContent = '🌙'; // 切换到月亮图标
+                    // 保存主题设置到本地存储
+                    localStorage.setItem('appTheme', 'dark');
+                }
+            },
+        }
+    });
+</script>
 </body>
 </html>
