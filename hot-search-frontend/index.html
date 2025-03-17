@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>热点导航</title>
+    <title>热点一览</title>
     <link rel="icon" href="./icon/favicon.png">
     <link rel="stylesheet" href="index.css">
 
@@ -41,12 +41,20 @@
                     <span class="list-title">{{ platform.name }}</span>
                 </div>
                 <div class="list-content">
-                    <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
-                        <span class="rank">{{ item.hotRank }}</span>
-                        <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
-                            {{ item.hotTitle.length > 30 ? item.hotTitle.substring(0, 30) + '...' : item.hotTitle }}
-                        </a>
-                        <span class="score">{{ formatHotValue(item.hotValue) }}</span>
+                    <div v-if="platform.isLoading" class="loading">
+                        数据加载中...
+                    </div>
+                    <div v-else-if="platform.error" class="error">
+                        数据加载失败，请刷新重试。
+                    </div>
+                    <div v-else>
+                        <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
+                            <span class="rank">{{ item.hotRank }}</span>
+                            <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
+                                {{ item.hotTitle.length > 30 ? item.hotTitle.substring(0, 30) + '...' : item.hotTitle }}
+                            </a>
+                            <span class="score">{{ formatHotValue(item.hotValue) }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,10 +73,10 @@
 
     function updateTime() {
         const now = new Date();
-        const beijingTime = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+        const beijingTime = now.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'});
         document.getElementById('beijing-time').textContent = `${beijingTime}`;
 
-        const weekDay = now.toLocaleString('zh-CN', { weekday: 'long' });
+        const weekDay = now.toLocaleString('zh-CN', {weekday: 'long'});
         document.getElementById('week-day').textContent = `${weekDay}`;
     }
 
@@ -85,14 +93,49 @@
         el: '#home',
         data: {
             platforms: [
-                { name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu' },
-                { name: '抖音热榜', logoClass: 'douyin-logo', hotList: [], type: 'douyin' },
-                { name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu' },
-                { name: 'B站热榜', logoClass: 'bilibili-logo', hotList: [], type: 'bilibili' },
-                { name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin' },
-                { name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang' },
-                { name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba' },
-                { name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao' }
+                {name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu', isLoading: true, error: false},
+                {
+                    name: '抖音热榜',
+                    logoClass: 'douyin-logo',
+                    hotList: [],
+                    type: 'douyin',
+                    isLoading: true,
+                    error: false
+                },
+                {name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu', isLoading: true, error: false},
+                {
+                    name: 'B站热榜',
+                    logoClass: 'bilibili-logo',
+                    hotList: [],
+                    type: 'bilibili',
+                    isLoading: true,
+                    error: false
+                },
+                {
+                    name: '掘金热榜',
+                    logoClass: 'juejin-logo',
+                    hotList: [],
+                    type: 'juejin',
+                    isLoading: true,
+                    error: false
+                },
+                {
+                    name: '腾讯网热榜',
+                    logoClass: 'tengxunwang-logo',
+                    hotList: [],
+                    type: 'tengxunwang',
+                    isLoading: true,
+                    error: false
+                },
+                {name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba', isLoading: true, error: false},
+                {
+                    name: '头条热榜',
+                    logoClass: 'toutiao-logo',
+                    hotList: [],
+                    type: 'toutiao',
+                    isLoading: true,
+                    error: false
+                }
             ]
         },
         methods: {
@@ -105,12 +148,17 @@
 
             // 获取热榜数据
             loadPlatformData(platform) {
-                axios.get(`http://localhost:8089/hotSearch/queryByType/${platform.type}`)
+                const self = this;
+                axios.get(`http://117.72.117.19:9782/hotSearch/queryByType/${platform.type}`)
                     .then(response => {
                         platform.hotList = response.data.data;
+                        platform.isLoading = false;
+                        platform.error = false;
                         console.log(`${platform.name} 数据:`, response.data.data);
                     })
                     .catch(error => {
+                        platform.isLoading = false;
+                        platform.error = true;
                         console.error(`获取${platform.name}数据失败`, error);
                     });
             },
@@ -125,7 +173,6 @@
 
             // 切换主题
             toggleTheme() {
-                const that = this;
                 const body = document.body;
                 const themeIcon = document.getElementById('theme-icon');
 

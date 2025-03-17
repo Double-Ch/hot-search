@@ -75,6 +75,10 @@ header {
     color: #b0b0b0; /* 热榜项标题文字颜色 */
 }
 
+.dark-theme .item-title:hover {
+    color: skyblue; /* 热榜项悬停文字颜色 */
+}
+
 .dark-theme .score {
     color: #999; /* 热榜项热度值文字颜色 */
 }
@@ -103,19 +107,14 @@ header {
 }
 
 /* 浅色主题下拉条样式 */
-.light-theme ::-webkit-scrollbar {
+body ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-    background-color: #f5f5f5; /* 滚动条背景颜色 */
 }
 
-.light-theme ::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* 滚动条滑块颜色 */
+body ::-webkit-scrollbar-thumb {
+    background-color: #cbcbcb; /* 滚动条滑块颜色 */
     border-radius: 4px;
-}
-
-.light-theme ::-webkit-scrollbar-track {
-    background-color: #f5f5f5; /* 滚动条轨道颜色 */
 }
 
 .search-box {
@@ -207,7 +206,8 @@ header {
 }
 
 .tengxunwang-logo {
-    background-image: url('https://mat1.gtimg.com/qqcdn/xw/favicon.ico');
+    /*background-image: url('https://mat1.gtimg.com/qqcdn/xw/favicon.ico');*/
+    background-image: url('./icon/tengxunwang-favicon.ico');
 }
 
 .toutiao-logo {
@@ -240,11 +240,12 @@ header {
     padding: 8px 0;
     color: #5e5d5d;
     border-bottom: 1px solid #f0f0f0;
-    transition: color 0.5s ease, border-color 0.5s ease; /* 添加颜色和边框色过渡动画 */
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease; /* 添加颜色、边框色和缩放过渡动画 */
 }
 
 .list-item:hover {
     color: skyblue;
+    transform: scale(1.03); /* 鼠标悬停时微微放大 */
 }
 
 .rank {
@@ -288,4 +289,29 @@ header {
     .list-wrapper {
         grid-template-columns: 1fr;
     }
+}
+
+/* 添加加载和错误状态的样式 */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #999;
+    font-size: 14px;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #ff6b6b;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.error:hover {
+    color: #ff8787;
 }
