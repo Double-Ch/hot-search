@@ -1,0 +1,380 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    /*font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;*/
+}
+
+body {
+    padding: 20px;
+    background-color: #f5f5f5;
+    transition: background-color 0.5s ease; /* 添加背景色过渡动画 */
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.time-display {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease, color 0.5s ease; /* 添加过渡动画 */
+}
+
+.time-display span {
+    margin-right: 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+.theme-toggle {
+    position: absolute;
+    right: 20px; /* 靠近浏览器侧边 */
+    top: 20px; /* 与时间显示对齐 */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px; /* 图标大小 */
+}
+
+.theme-toggle:focus {
+    outline: none;
+}
+
+.dark-theme {
+    background-color: #000;
+    color: #fff;
+}
+
+.dark-theme .time-display {
+    background-color: #171717;
+    color: #fff;
+}
+
+.dark-theme .time-display span {
+    color: #fff;
+}
+
+/* 暗色主题样式扩展 */
+.dark-theme .hot-list-card {
+    background-color: #171717; /* 热榜框背景颜色 */
+}
+
+.dark-theme .list-title {
+    color: #fff; /* 热榜平台名称文字颜色 */
+}
+
+.dark-theme .item-title {
+    color: #b0b0b0; /* 热榜项标题文字颜色 */
+}
+
+.dark-theme .item-title:hover {
+    color: skyblue; /* 热榜项悬停文字颜色 */
+}
+
+.dark-theme .score {
+    color: #999; /* 热榜项热度值文字颜色 */
+}
+
+.dark-theme .rank {
+    color: #ff6b6b; /* 热榜项排名文字颜色 */
+}
+
+.dark-theme .list-item:hover {
+    color: skyblue; /* 热榜项悬停文字颜色 */
+}
+
+.dark-theme ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #171717; /* 滚动条背景颜色 */
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+    background-color: #333; /* 滚动条滑块颜色 */
+    border-radius: 4px;
+}
+
+.dark-theme ::-webkit-scrollbar-track {
+    background-color: #171717; /* 滚动条轨道颜色 */
+}
+
+/* 浅色主题下拉条样式 */
+body ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+body ::-webkit-scrollbar-thumb {
+    background-color: #cbcbcb; /* 滚动条滑块颜色 */
+    border-radius: 4px;
+}
+
+/*天气显示*/
+.weather-display {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-right: 10px; /* 与时间显示区域保持一定间距 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.weather-display span {
+    margin-right: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.dark-theme .weather-display {
+    background-color: #171717;
+    color: #fff;
+}
+
+.dark-theme .weather-display span {
+    color: #fff;
+}
+
+/*天气显示-超链接*/
+.weather-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.dark-theme .weather-link {
+    background-color: #171717;
+    color: #fff;
+}
+
+.dark-theme .weather-link:hover {
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 5px;
+}
+
+.search-icon {
+    color: #999;
+    margin-left: 5px;
+}
+
+.container {
+    /* max-width: 1200px; */
+    margin: 0 auto;
+}
+
+.list-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(350px, 1fr));
+    /*grid-template-columns: repeat(3, 1fr);*/
+    gap: 20px;
+}
+
+.hot-list-card {
+    background-color: #fff;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    height: 450px;
+    /* 固定热榜框的高度 */
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, background-color 0.5s ease; /* 添加背景色过渡动画 */
+}
+
+.hot-list-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.list-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: border-color 0.5s ease; /* 添加边框色过渡动画 */
+}
+
+.logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.baidu-logo {
+    background-image: url('https://www.baidu.com/favicon.ico');
+}
+
+.douyin-logo {
+    background-image: url('https://www.douyin.com/favicon.ico');
+}
+
+.zhihu-logo {
+    background-image: url('https://www.zhihu.com/favicon.ico');
+}
+
+.bilibili-logo {
+    background-image: url('https://www.bilibili.com/favicon.ico');
+}
+
+.juejin-logo {
+    background-image: url('https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web//static/favicon.ico');
+}
+
+.tieba-logo {
+    background-image: url('https://tieba.baidu.com/favicon.ico');
+}
+
+.tengxunwang-logo {
+    /* background-image: url('https://mat1.gtimg.com/qqcdn/xw/favicon.ico'); */
+    background-image: url('../../public/tengxunwang-favicon.ico');
+}
+
+.toutiao-logo {
+    background-image: url('https://www.toutiao.com/favicon.ico');
+}
+
+.list-title {
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
+}
+
+.update-time {
+    font-size: 12px;
+    color: #999;
+    margin-left: auto;
+}
+
+.list-content {
+    overflow-y: auto;
+    /* 允许垂直滚动 */
+    padding: 10px 15px;
+    height: calc(100% - 50px);
+    /* 确保内容区域高度自适应 */
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    color: #5e5d5d;
+    border-bottom: 1px solid #f0f0f0;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease; /* 添加颜色、边框色和缩放过渡动画 */
+}
+
+.list-item:hover {
+    color: skyblue;
+    transform: scale(1.03); /* 鼠标悬停时微微放大 */
+}
+
+.rank {
+    width: 20px;
+    margin-right: 10px;
+
+    /*color: #ff6b6b;*/
+    color: #666;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
+}
+
+.top1 {
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+.top2 {
+    color: #ffad00;
+    font-weight: bold;
+}
+
+.top3 {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.item-title {
+    flex: 1;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+    text-decoration: none;
+}
+
+.score {
+    margin-left: 10px;
+    color: #999;
+    font-size: 12px;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
+}
+
+@media (max-width: 1200px) {
+    .list-wrapper {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .list-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .list-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 添加加载和错误状态的样式 */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #999;
+    font-size: 14px;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #ff6b6b;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.error:hover {
+    color: #ff8787;
+}
