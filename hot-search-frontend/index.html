@@ -23,6 +23,15 @@
 <!-- 创建一个根元素 -->
 <div class="home" id="home">
     <header>
+        <!-- 天气显示 -->
+        <a href="#" target="_blank"  class="weather-link">
+            <div class="weather-display">
+                <span id="weather-city"></span>
+                <span id="weather-icon"></span>
+                <span id="weather-condition"></span>
+                <span id="weather-temp"></span>
+            </div>
+        </a>
         <div class="time-display">
             <span id="beijing-time"></span>
             <span id="week-day"></span>
@@ -73,6 +82,68 @@
         setInterval(updateTime, 1000);
         // 页面加载时检查本地存储的主题设置
         checkLocalStorageTheme();
+        // 获取用户地理位置并显示天气
+        getUserLocation();
+    }
+
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    console.log('获取地理位置成功：', latitude, longitude)
+                    // 将经纬度转换为adcode
+                    getWeatherByAdcode(latitude, longitude);
+                },
+                error => {
+                    console.error('获取地理位置失败', error);
+                    // 可以在这里提供一个默认的地理位置或者提示用户手动输入
+                }
+            );
+        } else {
+            console.error('浏览器不支持地理位置获取');
+        }
+    }
+
+    function getWeatherByAdcode(latitude, longitude) {
+        // 获取adcode
+        axios.get('http://117.72.117.19:9782/Weather/getWeather', {
+            params: {
+                latitude: latitude,
+                longitude: longitude
+            }
+        })
+            .then(response => {
+                console.log('解析返回：', response)
+                const weatherData = response.data.data;
+                // 更新天气显示
+                updateWeatherDisplay(weatherData);
+            })
+    }
+
+    function updateWeatherDisplay(weatherData) {
+        document.getElementById('weather-city').textContent = weatherData.city;
+        document.getElementById('weather-icon').textContent = getWeatherIcon(weatherData.weather);
+        document.getElementById('weather-condition').textContent = weatherData.weather;
+        document.getElementById('weather-temp').textContent = weatherData.temperature + '℃';
+
+        // 设置跳转链接
+        const weatherLink = document.querySelector('.weather-link');
+        weatherLink.href = `https://tianqi.qq.com/?province=${encodeURIComponent(weatherData.province)}&city=${encodeURIComponent(weatherData.city)}`;
+    }
+
+    // 根据天气状况返回对应的图标
+    function getWeatherIcon(condition) {
+        const weatherIcons = {
+            '晴': '☀️',
+            '多云': '⛅',
+            '阴': '☁️',
+            '小雨': '🌦️',
+            '大雨': '🌧️',
+            '雪': '❄️'
+        };
+        return weatherIcons[condition] || ''; // 如果没有匹配的图标，返回空字符串
     }
 
     function updateTime() {

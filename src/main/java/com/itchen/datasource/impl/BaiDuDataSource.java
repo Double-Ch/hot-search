@@ -82,7 +82,8 @@ public class BaiDuDataSource implements HotDataSource {
                             .hotRank(i + 1)
                             .hotTagImg(item.getStr("img"))
                             .hotValue(item.getInt("hotScore"))
-                            .hotUrl(item.getStr("url"))
+//                            .hotUrl(item.getStr("url"))
+                            .hotUrl("https://www.baidu.com/s?wd=" + item.getStr("word") + "&sa=fyb_news&rsv_dl=fyb_news")
                             .iconUrl(BAI_DU_ICON)
                             .build();
                     hotSearchVoList.add(hotSearchVo);

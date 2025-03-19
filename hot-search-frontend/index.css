@@ -118,6 +118,51 @@ body ::-webkit-scrollbar-thumb {
     border-radius: 4px;
 }
 
+/*天气显示*/
+.weather-display {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-right: 10px; /* 与时间显示区域保持一定间距 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.weather-display span {
+    margin-right: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+.dark-theme .weather-display {
+    background-color: #171717;
+    color: #fff;
+}
+
+.dark-theme .weather-display span {
+    color: #fff;
+}
+
+/*天气显示-超链接*/
+.weather-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.dark-theme .weather-link {
+    background-color: #171717;
+    color: #fff;
+}
+
+.dark-theme .weather-link:hover {
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
 .search-box {
     display: flex;
     align-items: center;
