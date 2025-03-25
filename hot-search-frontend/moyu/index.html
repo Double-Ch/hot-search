@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>职场小站 - 打工人的小确幸</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" href="./icon/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+<body>
+<div class="home" id="home">
+    <header>
+        <div class="container">
+            <div class="nav">
+                <div class="logo">
+                    <a href="#" target="_blank" style="text-decoration: none; display: flex; align-items: center;">
+                        <i class="fas fa-fish" style="font-size: 24px; color: #3498db; margin-right: 5px"></i>
+                        <h1>职场小站</h1>
+                    </a>
+                </div>
+                <a href="#" target="_blank" class="weather-link">
+                    <span id="weather-city"></span>
+                    <span id="weather-icon"></span>
+                    <span id="weather-condition"></span>
+                    <span id="weather-temp"></span>
+                </a>
+                <div class="date-time">
+                    <span id="beijing-time"></span>
+                    <span id="week-day"></span>
+                    <button class="theme-toggle" @click="toggleTheme">
+                        <div id="theme-icon">🌞</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="card" v-for="(platform, index) in platforms" :key="index">
+                <div class="card-header">
+                    <div class="card-icon" :class="platform.logoClass"></div>
+                    <h3 class="card-title">{{ platform.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
+                        <span class="rank" :class="{
+                            'top1': item.hotRank === 1,
+                            'top2': item.hotRank === 2,
+                            'top3': item.hotRank === 3
+                        }">{{ item.hotRank }}</span>
+                        <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
+                            {{ item.hotTitle }}
+                        </a>
+                        <span class="score">{{ formatHotValue(item.hotValue) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-section">
+            <h2 class="section-title">摸鱼必备功能</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <h3 class="feature-title">生活小技巧</h3>
+                    <p class="feature-content">分享各种实用的生活小技巧，帮助你在工作之余提高生活质量。</p>
+                    <div class="feature-image"></div>
+                </div>
+                <div class="feature-card">
+                    <h3 class="feature-title">职场趣事</h3>
+                    <p class="feature-content">分享职场中的有趣经历和故事，增加趣味性和互动性。</p>
+                    <div class="feature-image"></div>
+                </div>
+                <div class="feature-card">
+                    <h3 class="feature-title">放松时刻</h3>
+                    <p class="feature-content">提供轻松的图片、视频或音乐，帮助你在工作间隙放松心情。</p>
+                    <div class="feature-image"></div>
+                </div>
+                <div class="feature-card">
+                    <h3 class="feature-title">摸鱼工具</h3>
+                    <p class="feature-content">各种实用的摸鱼小工具，让你的工作时间更加轻松愉快。</p>
+                    <div class="feature-image"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="countdown-container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="countdown-title">下班倒计时</h3>
+                <div style="display: flex; align-items: center;">
+                    <input type="time" class="time-input" id="offTime" value="17:00" style="margin-right: 10px;">
+                    <button onclick="setOffTime()">设置下班时间</button>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">23</div>
+                    <div class="countdown-label">小时</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">03</div>
+                    <div class="countdown-label">分钟</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">10</div>
+                    <div class="countdown-label">秒</div>
+                </div>
+            </div>
+        </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">关于我们</a>
+                <a href="#" class="footer-link">使用条款</a>
+                <a href="#" class="footer-link">隐私政策</a>
+                <a href="#" class="footer-link">联系我们</a>
+            </div>
+            <p class="footer-text">© 2025 摸鱼驿站 - 打工人的小确幸</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+    let offTime = new Date();
+    offTime.setHours(17, 0, 0, 0);
+
+    function setOffTime() {
+        const timeInput = document.getElementById('offTime').value;
+        const [hours, minutes] = timeInput.split(':').map(Number);
+        const now = new Date();
+        offTime = new Date(now);
+        offTime.setHours(hours, minutes, 0, 0);
+        if (offTime <= now) {
+            offTime.setDate(offTime.getDate() + 1);
+        }
+        updateCountdown();
+    }
+
+    function updateCountdown() {
+        const now = new Date();
+        const diff = offTime - now;
+        if (diff <= 0) {
+            clearInterval(countdownInterval);
+            document.getElementById('hours').textContent = '00';
+            document.getElementById('minutes').textContent = '00';
+            document.getElementById('seconds').textContent = '00';
+            return;
+        }
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    const countdownInterval = setInterval(updateCountdown, 1000);
+
+    window.onload = function () {
+        vm.init();
+        updateTime();
+        updateCountdown();
+        setInterval(updateTime, 1000);
+        setInterval(updateCountdown, 1000);
+        checkLocalStorageTheme();
+        getUserLocation();
+    };
+
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    getWeatherByAdcode(latitude, longitude);
+                },
+                error => {
+                }
+            );
+        } else {
+        }
+    }
+
+    function getWeatherByAdcode(latitude, longitude) {
+        axios.get('http://117.72.117.19:9782/Weather/getWeather', {
+            params: {
+                latitude: latitude,
+                longitude: longitude
+            }
+        })
+            .then(response => {
+                const weatherData = response.data.data;
+                updateWeatherDisplay(weatherData);
+            })
+    }
+
+    function updateWeatherDisplay(weatherData) {
+        document.getElementById('weather-city').textContent = weatherData.city;
+        document.getElementById('weather-icon').textContent = getWeatherIcon(weatherData.weather);
+        document.getElementById('weather-condition').textContent = weatherData.weather;
+        document.getElementById('weather-temp').textContent = weatherData.temperature + '℃';
+        const weatherLink = document.querySelector('.weather-link');
+        weatherLink.href = `https://tianqi.qq.com/?province=${encodeURIComponent(weatherData.province)}&city=${encodeURIComponent(weatherData.city)}`;
+    }
+
+    function getWeatherIcon(condition) {
+        const weatherIcons = {
+            '晴': '☀️',
+            '多云': '⛅',
+            '阴': '☁️',
+            '小雨': '🌦️',
+            '大雨': '🌧️',
+            '雪': '❄️'
+        };
+        return weatherIcons[condition] || '';
+    }
+
+    function updateTime() {
+        const now = new Date();
+        const beijingTime = now.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'});
+        document.getElementById('beijing-time').textContent = `${beijingTime}`;
+        const weekDay = now.toLocaleString('zh-CN', {weekday: 'long'});
+        document.getElementById('week-day').textContent = `${weekDay}`;
+    }
+
+    function checkLocalStorageTheme() {
+        const savedTheme = localStorage.getItem('appTheme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('theme-icon').textContent = '🌙';
+        }
+    }
+
+    const vm = new Vue({
+        el: '#home',
+        data: {
+            platforms: [
+                {name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu', isLoading: true, error: false},
+                {name: '抖音热榜', logoClass: 'douyin-logo', hotList: [], type: 'douyin', isLoading: true, error: false},
+                {name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu', isLoading: true, error: false},
+                {name: 'B站热榜', logoClass: 'bilibili-logo', hotList: [], type: 'bilibili', isLoading: true, error: false},
+                {name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin', isLoading: true, error: false},
+                {name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang', isLoading: true, error: false},
+                {name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba', isLoading: true, error: false},
+                {name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao', isLoading: true, error: false}
+            ]
+        },
+        methods: {
+            init() {
+                this.platforms.forEach(platform => {
+                    this.loadPlatformData(platform);
+                });
+            },
+            loadPlatformData(platform) {
+                axios.get(`http://117.72.117.19:9782/hotSearch/queryByType/${platform.type}`)
+                    .then(response => {
+                        platform.hotList = response.data.data;
+                        platform.isLoading = false;
+                        platform.error = false;
+                    })
+                    .catch(error => {
+                        platform.isLoading = false;
+                        platform.error = true;
+                    });
+            },
+            formatHotValue(value) {
+                if (value > 10000) {
+                    return (value / 10000).toFixed(1) + '万';
+                }
+                return value;
+            },
+            toggleTheme() {
+                const body = document.body;
+                const themeIcon = document.getElementById('theme-icon');
+                if (body.classList.contains('dark-theme')) {
+                    body.classList.remove('dark-theme');
+                    themeIcon.textContent = '🌞';
+                    localStorage.setItem('appTheme', 'light');
+                } else {
+                    body.classList.add('dark-theme');
+                    themeIcon.textContent = '🌙';
+                    localStorage.setItem('appTheme', 'dark');
+                }
+            },
+        }
+    });
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}年${month}月${day}日`;
+    }
+
+    function formatTime(date) {
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+    }
+</script>
+</body>
+</html>

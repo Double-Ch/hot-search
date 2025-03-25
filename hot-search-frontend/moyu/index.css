@@ -1,0 +1,542 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    line-height: 1.6;
+    transition: background-color 0.5s ease; /* 添加背景色过渡动画 */
+}
+
+/* 浅色主题下拉条样式 */
+body ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+body ::-webkit-scrollbar-thumb {
+    background-color: #f1f1f1; /* 滚动条滑块颜色 */
+    border-radius: 4px;
+}
+
+/* 深色主题样式 */
+.dark-theme {
+    background-color: #000;
+    /*color: #fff;*/
+}
+
+.dark-theme header {
+    background-color: #171717;
+}
+
+.dark-theme .logo > a > h1 {
+    color: #fff;
+}
+
+.dark-theme .date-time > span {
+    color: #fff;
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+    background-color: #171717;
+    /*color: #fff;*/
+}
+
+.dark-theme .card {
+    background-color: #1a1a1a; /* 设置卡片背景颜色为深灰色 */
+    border: 1px solid #333; /* 设置卡片边框颜色为稍浅的灰色 */
+}
+
+.dark-theme .card-header {
+    border-bottom: 1px solid #333; /* 设置卡片头部底部边框颜色为稍浅的灰色 */
+}
+
+.dark-theme .card-title {
+    color: #b0b0b0; /* 设置卡片标题文字颜色为浅灰色 */
+}
+
+.dark-theme .item-title {
+    color: #858585; /* 设置热榜内容文字颜色为浅灰色 */
+}
+.dark-theme .item-title:hover {
+    color: skyblue; /* 热榜项目悬停时 */
+}
+
+.dark-theme .rank,
+.dark-theme .score {
+    color: #999; /* 设置热榜浏览量文字颜色为更浅的灰色 */
+}
+
+.dark-theme .top1 {
+    color: #ff6b6b; /* 设置排名第一的数字颜色为红色 */
+}
+
+.dark-theme .top2 {
+    color: #ffad00; /* 设置排名第二的数字颜色为橙色 */
+}
+
+.dark-theme .top3 {
+    color: #ffd700; /* 设置排名第三的数字颜色为黄色 */
+}
+
+.dark-theme .feature-section {
+    background-color: #1a1a1a;
+}
+
+.dark-theme .section-title {
+    color: #b0b0b0;
+    border-bottom: 1px solid #333;
+}
+
+.dark-theme .feature-card {
+    background-color: #222;
+    border: 1px solid #333;
+}
+
+.dark-theme .feature-title {
+    color: #b0b0b0;
+}
+
+.dark-theme .feature-content {
+    color: #707070;
+}
+
+.dark-theme .feature-image {
+    background-color: #333;
+}
+
+.dark-theme .countdown-container {
+    background-color: #222;
+    border: 1px solid #333;
+}
+
+.dark-theme .countdown-title {
+    color: #b0b0b0;
+}
+
+.dark-theme .countdown-value {
+    color: #5fb8e5;
+}
+
+.dark-theme footer {
+    background-color: #1a252f;
+}
+
+/* 深色主题下热榜滚动条 */
+.dark-theme ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: #171717; /* 滚动条背景颜色 */
+}
+
+.dark-theme ::-webkit-scrollbar-thumb {
+    background-color: #333; /* 滚动条滑块颜色 */
+    border-radius: 4px;
+}
+
+.dark-theme ::-webkit-scrollbar-track {
+    background-color: #171717; /* 滚动条轨道颜色 */
+}
+
+/* 天气 */
+.dark-theme .weather-link {
+    background-color: #171717;
+    color: #fff;
+}
+
+.dark-theme .weather-link:hover {
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+header {
+    background-color: #fff;
+    padding: 10px 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 30px;
+    margin-right: 10px;
+}
+
+.logo h1 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+/*天气显示-超链接*/
+.weather-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.weather-link > span {
+    font-size: 14px;
+    margin-right: 5px; /* 保持一定间距 */
+}
+
+/* 北京时间 */
+.date-time {
+    display: flex;
+    align-items: center;
+}
+
+.date-time span {
+    margin-left: 15px;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    margin-left: 15px;
+    transition: transform 0.2s ease;
+}
+
+.main-content {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    height: 490px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease, background-color 0.5s ease; /* 添加背景色过渡动画 */
+}
+
+.card-header {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.card-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.card-body {
+    overflow-y: auto;
+    /* 允许垂直滚动 */
+    padding: 10px 15px;
+    height: calc(100% - 50px);
+    /* 确保内容区域高度自适应 */
+}
+
+.hot-list {
+    list-style: none;
+}
+
+.hot-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.hot-item:last-child {
+    border-bottom: none;
+}
+
+.hot-item-number {
+    font-size: 14px;
+    color: #e74c3c;
+    font-weight: bold;
+    width: 20px;
+    margin-right: 10px;
+}
+
+.hot-item-content {
+    flex: 1;
+    font-size: 14px;
+    color: #34495e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hot-item-views {
+    font-size: 12px;
+    color: #95a5a6;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    color: #5e5d5d;
+    border-bottom: 1px solid #f0f0f0;
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease; /* 添加颜色、边框色和缩放过渡动画 */
+}
+
+.list-item:hover {
+    color: skyblue;
+    transform: scale(1.03); /* 鼠标悬停时微微放大 */
+}
+
+.rank {
+    width: 20px;
+    margin-right: 10px;
+
+    /*color: #ff6b6b;*/
+    color: #666;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
+}
+
+.top1 {
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+.top2 {
+    color: #ffad00;
+    font-weight: bold;
+}
+
+.top3 {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.item-title {
+    flex: 1;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+    text-decoration: none;
+}
+
+.score {
+    margin-left: 10px;
+    color: #999;
+    font-size: 12px;
+    transition: color 0.5s ease; /* 添加颜色过渡动画 */
+}
+
+.feature-section {
+    margin-top: 30px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.feature-card {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.feature-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.feature-content {
+    font-size: 14px;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+}
+
+.feature-image {
+    width: 100%;
+    height: 120px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.countdown-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.countdown-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.countdown-item {
+    text-align: center;
+    margin: 0 15px;
+}
+
+.countdown-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #3498db;
+}
+
+.countdown-label {
+    font-size: 12px;
+    color: #95a5a6;
+}
+
+footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px 0;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.footer-link {
+    color: #bdc3c7;
+    margin: 0 10px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-link:hover {
+    color: #ecf0f1;
+}
+
+.footer-text {
+    font-size: 12px;
+    color: #95a5a6;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .date-time {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+/*平台icon*/
+.baidu-logo {
+    background-image: url('https://www.baidu.com/favicon.ico');
+}
+
+.douyin-logo {
+    background-image: url('https://www.douyin.com/favicon.ico');
+}
+
+.zhihu-logo {
+    background-image: url('https://www.zhihu.com/favicon.ico');
+}
+
+.bilibili-logo {
+    background-image: url('https://www.bilibili.com/favicon.ico');
+}
+
+.juejin-logo {
+    background-image: url('https://lf3-cdn-tos.bytescm.com/obj/static/xitu_juejin_web//static/favicon.ico');
+}
+
+.tieba-logo {
+    background-image: url('https://tieba.baidu.com/favicon.ico');
+}
+
+.tengxunwang-logo {
+    background-image: url('./icon/tengxunwang-favicon.ico');
+}
+
+.toutiao-logo {
+    background-image: url('https://www.toutiao.com/favicon.ico');
+}
