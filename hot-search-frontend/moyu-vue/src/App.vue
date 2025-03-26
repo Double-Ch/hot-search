@@ -39,16 +39,24 @@
             <h3 class="card-title">{{ platform.name }}</h3>
           </div>
           <div class="card-body">
-            <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
-              <span class="rank" :class="{
-                'top1': item.hotRank === 1,
-                'top2': item.hotRank === 2,
-                'top3': item.hotRank === 3
-              }">{{ item.hotRank }}</span>
-              <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
-                {{ item.hotTitle }}
-              </a>
-              <span class="score">{{ formatHotValue(item.hotValue) }}</span>
+            <div v-if="platform.isLoading" class="loading">
+              数据加载中...
+            </div>
+            <div v-else-if="platform.error" class="error">
+              数据加载失败，请刷新重试。
+            </div>
+            <div v-else>
+              <div class="list-item" v-for="(item, itemIndex) in platform.hotList" :key="itemIndex">
+    <span class="rank" :class="{
+        'top1': item.hotRank === 1,
+        'top2': item.hotRank === 2,
+        'top3': item.hotRank === 3
+    }">{{ item.hotRank }}</span>
+                <a :href="item.hotUrl" target="_blank" class="item-title" :title="item.hotTitle">
+                  {{ item.hotTitle.length > 30 ? item.hotTitle.substring(0, 30) + '...' : item.hotTitle }}
+                </a>
+                <span class="score">{{ formatHotValue(item.hotValue) }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -89,21 +97,21 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h3 class="countdown-title">下班倒计时</h3>
           <div style="display: flex; align-items: center;">
-            <input type="time" class="time-input" id="offTime" value="17:00" style="margin-right: 10px;">
-            <button onclick="setOffTime()">设置下班时间</button>
+            <input type="time" class="time-input" id="offTime" value="18:00" style="margin-right: 10px;">
+            <button @click="setOffTime">设置下班时间</button>
           </div>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
           <div class="countdown-item">
-            <div class="countdown-value" id="hours">23</div>
+            <div class="countdown-value" id="hours">0</div>
             <div class="countdown-label">小时</div>
           </div>
           <div class="countdown-item">
-            <div class="countdown-value" id="minutes">03</div>
+            <div class="countdown-value" id="minutes">0</div>
             <div class="countdown-label">分钟</div>
           </div>
           <div class="countdown-item">
-            <div class="countdown-value" id="seconds">10</div>
+            <div class="countdown-value" id="seconds">0</div>
             <div class="countdown-label">秒</div>
           </div>
         </div>
@@ -149,17 +157,39 @@ export default {
 
     // 设置下班时间
     const setOffTime = () => {
-      console.log('设置下班时间')
       const timeInput = document.getElementById('offTime').value;
-      const [hours, minutes] = timeInput.split(':').map(Number);
+      const [hoursInput, minutesInput] = timeInput.split(':').map(Number);
       const now = new Date();
-      offTime = new Date(now);
-      offTime.setHours(hours, minutes, 0, 0);
-      if (offTime <= now) {
-        offTime.setDate(offTime.getDate() + 1);
+      offTime.value = new Date(now);
+      offTime.value.setHours(hoursInput, minutesInput, 0, 0);
+      if (offTime.value <= now) {
+        offTime.value.setDate(offTime.value.getDate() + 1);
       }
+      // 保存到本地存储
+      localStorage.setItem('offTime', offTime.value.toISOString());
+      // 更新输入框的值
+      document.getElementById('offTime').value = timeInput;
       updateCountdown();
     };
+
+    // 更新倒计时
+    const updateCountdown = () => {
+      const now = new Date();
+      const workEndTime = offTime.value;
+      if (now > workEndTime) {
+        offTime.value.setDate(offTime.value.getDate() + 1);
+      }
+      const timeDifference = workEndTime - now;
+
+      hours.value = Math.floor(timeDifference / (1000 * 60 * 60));
+      minutes.value = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+      seconds.value = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+      document.getElementById('hours').textContent = hours.value.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.value.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = seconds.value.toString().padStart(2, '0');
+    };
+
 
     // 切换主题模式
     const toggleTheme = () => {
@@ -219,7 +249,7 @@ export default {
       return value;
     };
 
-    // 更新时间
+    // 更新导航栏时间、星期显示
     const updateTime = () => {
       const now = new Date();
       const beijingTime = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
@@ -229,29 +259,6 @@ export default {
       document.getElementById('week-day').textContent = `${weekDay}`;
     };
 
-    // 更新倒计时
-    const updateCountdown = () => {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const date = now.getDate();
-
-      let workEndTime = new Date(year, month, date, 18, 30, 0);
-
-      if (now > workEndTime) {
-        workEndTime = new Date(year, month, date + 1, 18, 30, 0);
-      }
-
-      const timeDifference = workEndTime - now;
-
-      hours.value = Math.floor(timeDifference / (1000 * 60 * 60));
-      minutes.value = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      seconds.value = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-      document.getElementById('hours').textContent = hours.value.toString().padStart(2, '0');
-      document.getElementById('minutes').textContent = minutes.value.toString().padStart(2, '0');
-      document.getElementById('seconds').textContent = seconds.value.toString().padStart(2, '0');
-    };
 
     // 获取用户地理位置
     const getUserLocation = () => {
@@ -326,6 +333,26 @@ export default {
       checkLocalStorageTheme();
       init();
       updateTime();
+
+      // 从本地存储加载下班时间
+      const savedOffTime = localStorage.getItem('offTime');
+      if (savedOffTime) {
+        offTime.value = new Date(savedOffTime);
+        // 更新输入框的值
+        const hours = offTime.value.getHours();
+        const minutes = offTime.value.getMinutes();
+        document.getElementById('offTime').value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      } else {
+        // 默认下班时间为18:00
+        const now = new Date();
+        offTime.value = new Date(now);
+        offTime.value.setHours(18, 0, 0, 0);
+        if (offTime.value <= now) {
+          offTime.value.setDate(offTime.value.getDate() + 1);
+        }
+        // 更新输入框的值
+        document.getElementById('offTime').value = '18:00';
+      }
 
       updateCountdown();
       // 获取用户地理位置并显示天气

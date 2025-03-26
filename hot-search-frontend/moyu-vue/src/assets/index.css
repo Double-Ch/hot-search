@@ -534,9 +534,34 @@ footer {
 }
 
 .tengxunwang-logo {
-    background-image: url('./icon/tengxunwang-favicon.ico');
+    background-image: url('../../public/tengxunwang-favicon.ico');
 }
 
 .toutiao-logo {
     background-image: url('https://www.toutiao.com/favicon.ico');
+}
+
+/* 热搜数据加载中和获取错误的样式 */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #999;
+    font-size: 14px;
+}
+
+.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #ff6b6b;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.error:hover {
+    color: #ff8787;
 }
