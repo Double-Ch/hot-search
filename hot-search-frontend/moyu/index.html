@@ -64,27 +64,71 @@
         </div>
 
         <div class="feature-section">
-            <h2 class="section-title">摸鱼必备功能</h2>
+            <h2 class="section-title">必备功能</h2>
             <div class="features">
                 <div class="feature-card">
                     <h3 class="feature-title">生活小技巧</h3>
-                    <p class="feature-content">分享各种实用的生活小技巧，帮助你在工作之余提高生活质量。</p>
-                    <div class="feature-image"></div>
+                    <p class="feature-content">分享职场中的有趣经历和故事，增加趣味性和互动性。</p>
+                    <div class="feature-grid">
+                        <div class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+                            <div class="feature-icon">
+                                <i :class="item.icon"></i>
+                            </div>
+                            <div class="feature-info">
+                                <h4>{{ item.title }}</h4>
+                                <p>{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="feature-card">
                     <h3 class="feature-title">职场趣事</h3>
                     <p class="feature-content">分享职场中的有趣经历和故事，增加趣味性和互动性。</p>
-                    <div class="feature-image"></div>
+                    <div class="feature-grid">
+                        <div class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+                            <div class="feature-icon">
+                                <i :class="item.icon"></i>
+                            </div>
+                            <div class="feature-info">
+                                <h4>{{ item.title }}</h4>
+                                <p>{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="feature-card">
                     <h3 class="feature-title">放松时刻</h3>
                     <p class="feature-content">提供轻松的图片、视频或音乐，帮助你在工作间隙放松心情。</p>
-                    <div class="feature-image"></div>
+                    <div class="feature-grid">
+                        <div class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+                            <div class="feature-icon">
+                                <i :class="item.icon"></i>
+                            </div>
+                            <div class="feature-info">
+                                <h4>{{ item.title }}</h4>
+                                <p>{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="feature-card">
                     <h3 class="feature-title">摸鱼工具</h3>
                     <p class="feature-content">各种实用的摸鱼小工具，让你的工作时间更加轻松愉快。</p>
-                    <div class="feature-image"></div>
+                    <div class="feature-grid">
+                        <div class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+                            <div class="feature-icon">
+                                <i :class="item.icon"></i>
+                                <h4>{{ item.title }}</h4>
+                            </div>
+                            <div class="feature-info">
+
+                                <p>{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,197 +157,304 @@
             </div>
         </div>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="#" class="footer-link">关于我们</a>
-                <a href="#" class="footer-link">使用条款</a>
-                <a href="#" class="footer-link">隐私政策</a>
-                <a href="#" class="footer-link">联系我们</a>
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#" class="footer-link">关于我们</a>
+                    <a href="#" class="footer-link">使用条款</a>
+                    <a href="#" class="footer-link">隐私政策</a>
+                    <a href="#" class="footer-link">联系我们</a>
+                </div>
+                <p class="footer-text">© 2025 摸鱼驿站 - 打工人的小确幸</p>
             </div>
-            <p class="footer-text">© 2025 摸鱼驿站 - 打工人的小确幸</p>
-        </div>
-    </footer>
-</div>
+        </footer>
+    </div>
 
-<script>
-    let offTime = new Date();
-    offTime.setHours(17, 0, 0, 0);
+    <script>
+        let offTime = new Date();
+        offTime.setHours(17, 0, 0, 0);
 
-    function setOffTime() {
-        const timeInput = document.getElementById('offTime').value;
-        const [hours, minutes] = timeInput.split(':').map(Number);
-        const now = new Date();
-        offTime = new Date(now);
-        offTime.setHours(hours, minutes, 0, 0);
-        if (offTime <= now) {
-            offTime.setDate(offTime.getDate() + 1);
-        }
-        updateCountdown();
-    }
-
-    function updateCountdown() {
-        const now = new Date();
-        const diff = offTime - now;
-        if (diff <= 0) {
-            clearInterval(countdownInterval);
-            document.getElementById('hours').textContent = '00';
-            document.getElementById('minutes').textContent = '00';
-            document.getElementById('seconds').textContent = '00';
-            return;
-        }
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-    }
-
-    const countdownInterval = setInterval(updateCountdown, 1000);
-
-    window.onload = function () {
-        vm.init();
-        updateTime();
-        updateCountdown();
-        setInterval(updateTime, 1000);
-        setInterval(updateCountdown, 1000);
-        checkLocalStorageTheme();
-        getUserLocation();
-    };
-
-    function getUserLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    getWeatherByAdcode(latitude, longitude);
-                },
-                error => {
-                }
-            );
-        } else {
-        }
-    }
-
-    function getWeatherByAdcode(latitude, longitude) {
-        axios.get('http://117.72.117.19:9782/Weather/getWeather', {
-            params: {
-                latitude: latitude,
-                longitude: longitude
+        function setOffTime() {
+            const timeInput = document.getElementById('offTime').value;
+            const [hours, minutes] = timeInput.split(':').map(Number);
+            const now = new Date();
+            offTime = new Date(now);
+            offTime.setHours(hours, minutes, 0, 0);
+            if (offTime <= now) {
+                offTime.setDate(offTime.getDate() + 1);
             }
-        })
-            .then(response => {
-                const weatherData = response.data.data;
-                updateWeatherDisplay(weatherData);
-            })
-    }
+            updateCountdown();
+        }
 
-    function updateWeatherDisplay(weatherData) {
-        document.getElementById('weather-city').textContent = weatherData.city;
-        document.getElementById('weather-icon').textContent = getWeatherIcon(weatherData.weather);
-        document.getElementById('weather-condition').textContent = weatherData.weather;
-        document.getElementById('weather-temp').textContent = weatherData.temperature + '℃';
-        const weatherLink = document.querySelector('.weather-link');
-        weatherLink.href = `https://tianqi.qq.com/?province=${encodeURIComponent(weatherData.province)}&city=${encodeURIComponent(weatherData.city)}`;
-    }
+        function updateCountdown() {
+            const now = new Date();
+            const diff = offTime - now;
+            if (diff <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
 
-    function getWeatherIcon(condition) {
-        const weatherIcons = {
-            '晴': '☀️',
-            '多云': '⛅',
-            '阴': '☁️',
-            '小雨': '🌦️',
-            '大雨': '🌧️',
-            '雪': '❄️'
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
+        window.onload = function () {
+            vm.init();
+            updateTime();
+            updateCountdown();
+            setInterval(updateTime, 1000);
+            setInterval(updateCountdown, 1000);
+            checkLocalStorageTheme();
+            getUserLocation();
         };
-        return weatherIcons[condition] || '';
-    }
 
-    function updateTime() {
-        const now = new Date();
-        const beijingTime = now.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'});
-        document.getElementById('beijing-time').textContent = `${beijingTime}`;
-        const weekDay = now.toLocaleString('zh-CN', {weekday: 'long'});
-        document.getElementById('week-day').textContent = `${weekDay}`;
-    }
-
-    function checkLocalStorageTheme() {
-        const savedTheme = localStorage.getItem('appTheme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            document.getElementById('theme-icon').textContent = '🌙';
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        getWeatherByAdcode(latitude, longitude);
+                    },
+                    error => {
+                    }
+                );
+            } else {
+            }
         }
-    }
 
-    const vm = new Vue({
-        el: '#home',
-        data: {
-            platforms: [
-                {name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu', isLoading: true, error: false},
-                {name: '抖音热榜', logoClass: 'douyin-logo', hotList: [], type: 'douyin', isLoading: true, error: false},
-                {name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu', isLoading: true, error: false},
-                {name: 'B站热榜', logoClass: 'bilibili-logo', hotList: [], type: 'bilibili', isLoading: true, error: false},
-                {name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin', isLoading: true, error: false},
-                {name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang', isLoading: true, error: false},
-                {name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba', isLoading: true, error: false},
-                {name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao', isLoading: true, error: false}
-            ]
-        },
-        methods: {
-            init() {
-                this.platforms.forEach(platform => {
-                    this.loadPlatformData(platform);
-                });
+        function getWeatherByAdcode(latitude, longitude) {
+            axios.get('http://117.72.117.19:9782/Weather/getWeather', {
+                params: {
+                    latitude: latitude,
+                    longitude: longitude
+                }
+            })
+                .then(response => {
+                    const weatherData = response.data.data;
+                    updateWeatherDisplay(weatherData);
+                })
+        }
+
+        function updateWeatherDisplay(weatherData) {
+            document.getElementById('weather-city').textContent = weatherData.city;
+            document.getElementById('weather-icon').textContent = getWeatherIcon(weatherData.weather);
+            document.getElementById('weather-condition').textContent = weatherData.weather;
+            document.getElementById('weather-temp').textContent = weatherData.temperature + '℃';
+            const weatherLink = document.querySelector('.weather-link');
+            weatherLink.href = `https://tianqi.qq.com/?province=${encodeURIComponent(weatherData.province)}&city=${encodeURIComponent(weatherData.city)}`;
+        }
+
+        function getWeatherIcon(condition) {
+            const weatherIcons = {
+                '晴': '☀️',
+                '多云': '⛅',
+                '阴': '☁️',
+                '小雨': '🌦️',
+                '大雨': '🌧️',
+                '雪': '❄️'
+            };
+            return weatherIcons[condition] || '';
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const beijingTime = now.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'});
+            document.getElementById('beijing-time').textContent = `${beijingTime}`;
+            const weekDay = now.toLocaleString('zh-CN', {weekday: 'long'});
+            document.getElementById('week-day').textContent = `${weekDay}`;
+        }
+
+        function checkLocalStorageTheme() {
+            const savedTheme = localStorage.getItem('appTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-icon').textContent = '🌙';
+            }
+        }
+
+        const vm = new Vue({
+            el: '#home',
+            data: {
+                platforms: [
+                    {
+                        name: '百度热榜',
+                        logoClass: 'baidu-logo',
+                        hotList: [],
+                        type: 'baidu',
+                        isLoading: true,
+                        error: false
+                    },
+                    {
+                        name: '抖音热榜',
+                        logoClass: 'douyin-logo',
+                        hotList: [],
+                        type: 'douyin',
+                        isLoading: true,
+                        error: false
+                    },
+                    {
+                        name: '知乎热榜',
+                        logoClass: 'zhihu-logo',
+                        hotList: [],
+                        type: 'zhihu',
+                        isLoading: true,
+                        error: false
+                    },
+                    {
+                        name: 'B站热榜',
+                        logoClass: 'bilibili-logo',
+                        hotList: [],
+                        type: 'bilibili',
+                        isLoading: true,
+                        error: false
+                    },
+                    {
+                        name: '掘金热榜',
+                        logoClass: 'juejin-logo',
+                        hotList: [],
+                        type: 'juejin',
+                        isLoading: true,
+                        error: false
+                    },
+                    {
+                        name: '腾讯网热榜',
+                        logoClass: 'tengxunwang-logo',
+                        hotList: [],
+                        type: 'tengxunwang',
+                        isLoading: true,
+                        error: false
+                    },
+                    {
+                        name: '贴吧热榜',
+                        logoClass: 'tieba-logo',
+                        hotList: [],
+                        type: 'tieba',
+                        isLoading: true,
+                        error: false
+                    },
+                    {
+                        name: '头条热榜',
+                        logoClass: 'toutiao-logo',
+                        hotList: [],
+                        type: 'toutiao',
+                        isLoading: true,
+                        error: false
+                    }
+                ],
+                lifeTips: [
+                    {
+                        icon: 'fas fa-home',
+                        title: '下厨房',
+                        description: '美食社区'
+                    },
+                    {
+                        icon: 'fas fa-book',
+                        title: '知乎',
+                        description: '知识分享社区'
+                    },
+                    {
+                        icon: 'fab fa-weixin',
+                        title: '微信公众平台',
+                        description: '内容创作与分发平台'
+                    },
+                    {
+                        icon: 'fab fa-bilibili',
+                        title: '哔哩哔哩',
+                        description: '年轻人的文化社区和视频平台'
+                    },
+                    {
+                        icon: 'fab fa-douban',
+                        title: '豆瓣',
+                        description: '兴趣社区，涵盖电影、书籍、音乐'
+                    },
+                    {
+                        icon: 'fas fa-music',
+                        title: '网易云音乐',
+                        description: '领先音乐平台'
+                    },
+                    {
+                        icon: 'fas fa-tools',
+                        title: '实用工具',
+                        description: '各种实用在线工具'
+                    },
+                    {
+                        icon: 'fas fa-gamepad',
+                        title: '小游戏',
+                        description: '简单有趣小游戏'
+                    }
+                ]
             },
-            loadPlatformData(platform) {
-                axios.get(`http://117.72.117.19:9782/hotSearch/queryByType/${platform.type}`)
-                    .then(response => {
-                        platform.hotList = response.data.data;
-                        platform.isLoading = false;
-                        platform.error = false;
-                    })
-                    .catch(error => {
-                        platform.isLoading = false;
-                        platform.error = true;
+            methods: {
+                init() {
+                    this.platforms.forEach(platform => {
+                        this.loadPlatformData(platform);
                     });
-            },
-            formatHotValue(value) {
-                if (value > 10000) {
-                    return (value / 10000).toFixed(1) + '万';
+                },
+                loadPlatformData(platform) {
+                    axios.get(`http://117.72.117.19:9782/hotSearch/queryByType/${platform.type}`)
+                        .then(response => {
+                            platform.hotList = response.data.data;
+                            platform.isLoading = false;
+                            platform.error = false;
+                        })
+                        .catch(error => {
+                            platform.isLoading = false;
+                            platform.error = true;
+                        });
+                },
+                formatHotValue(value) {
+                    if (value > 10000) {
+                        return (value / 10000).toFixed(1) + '万';
+                    }
+                    return value;
+                },
+                toggleTheme() {
+                    const body = document.body;
+                    const themeIcon = document.getElementById('theme-icon');
+                    if (body.classList.contains('dark-theme')) {
+                        body.classList.remove('dark-theme');
+                        themeIcon.textContent = '🌞';
+                        localStorage.setItem('appTheme', 'light');
+                    } else {
+                        body.classList.add('dark-theme');
+                        themeIcon.textContent = '🌙';
+                        localStorage.setItem('appTheme', 'dark');
+                    }
+                },
+                showTipDetails(tip) {
+                    alert(tip.content);
+                },
+                likeTip(tipId) {
+                    const tip = this.lifeTips.find(t => t.id === tipId);
+                    if (tip) {
+                        tip.likes++;
+                    }
                 }
-                return value;
-            },
-            toggleTheme() {
-                const body = document.body;
-                const themeIcon = document.getElementById('theme-icon');
-                if (body.classList.contains('dark-theme')) {
-                    body.classList.remove('dark-theme');
-                    themeIcon.textContent = '🌞';
-                    localStorage.setItem('appTheme', 'light');
-                } else {
-                    body.classList.add('dark-theme');
-                    themeIcon.textContent = '🌙';
-                    localStorage.setItem('appTheme', 'dark');
-                }
-            },
+            }
+        });
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}年${month}月${day}日`;
         }
-    });
 
-    function formatDate(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}年${month}月${day}日`;
-    }
-
-    function formatTime(date) {
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-    }
-</script>
+        function formatTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${hours}:${minutes}:${seconds}`;
+        }
+    </script>
 </body>
 </html>

@@ -11,11 +11,11 @@
           </div>
 
           <!-- 天气显示 -->
-          <a href="#" target="_blank" class="weather-link">
-            <span id="weather-city"></span>
-            <span id="weather-icon"></span>
-            <span id="weather-condition"></span>
-            <span id="weather-temp"></span>
+          <a :href="weatherLink" target="_blank" class="weather-link">
+            <span id="weather-city">{{ weather.city }}</span>
+            <span id="weather-icon">{{ weather.icon }}</span>
+            <span id="weather-condition">{{ weather.condition }}</span>
+            <span id="weather-temp">{{ weather.temperature }}℃</span>
           </a>
 
           <div class="date-time">
@@ -65,30 +65,78 @@
       </div>
 
       <div class="feature-section">
-        <h2 class="section-title">摸鱼必备功能</h2>
+        <h2 class="section-title">必备功能</h2>
         <div class="features">
           <div class="feature-card">
-            <h3 class="feature-title">生活小技巧</h3>
-            <p class="feature-content">分享各种实用的生活小技巧，帮助你在工作之余提高生活质量。</p>
-            <div class="feature-image"></div>
+            <h3 class="feature-title">生活类</h3>
+            <p class="feature-content">分享职场中的有趣经历和故事，增加趣味性和互动性。</p>
+            <div class="feature-grid">
+              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+                <div>
+                  <div class="feature-icon">
+                    <img :src="item.icon">
+                    <h4>{{ item.title }}</h4>
+                  </div>
+                  <div class="feature-info">
+                    <p>{{ item.description }}</p>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
 
           <div class="feature-card">
             <h3 class="feature-title">职场趣事</h3>
             <p class="feature-content">分享职场中的有趣经历和故事，增加趣味性和互动性。</p>
-            <div class="feature-image"></div>
+            <div class="feature-grid">
+              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+                <div>
+                  <div class="feature-icon">
+                    <img :src="item.icon">
+                    <h4>{{ item.title }}</h4>
+                  </div>
+                  <div class="feature-info">
+                    <p>{{ item.description }}</p>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
 
           <div class="feature-card">
             <h3 class="feature-title">放松时刻</h3>
             <p class="feature-content">提供轻松的图片、视频或音乐，帮助你在工作间隙放松心情。</p>
-            <div class="feature-image"></div>
+            <div class="feature-grid">
+              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in relaxList" :key="index">
+                <div>
+                  <div class="feature-icon">
+                    <img :src="item.icon">
+                    <h4>{{ item.title }}</h4>
+                  </div>
+                  <div class="feature-info">
+                    <p>{{ item.description }}</p>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
 
           <div class="feature-card">
             <h3 class="feature-title">摸鱼工具</h3>
             <p class="feature-content">各种实用的摸鱼小工具，让你的工作时间更加轻松愉快。</p>
-            <div class="feature-image"></div>
+            <div class="feature-grid">
+              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+                <div>
+                  <div class="feature-icon">
+                    <img :src="item.icon">
+                    <h4>{{ item.title }}</h4>
+                  </div>
+                  <div class="feature-info">
+                    <p>{{ item.description }}</p>
+                  </div>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -133,23 +181,21 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import {ref, onMounted} from 'vue';
+import {useLifeTips} from './composables/useLifeTips.js'
+import {useRelaxList} from './composables/useRelax.js'
+import {useHotList} from './composables/useHotList';
+import {useTheme} from './composables/useTheme.js';
+import {useWeather} from './composables/useWeather.js';
 
 export default {
   setup() {
-    const platforms = ref([
-      { name: '百度热榜', logoClass: 'baidu-logo', hotList: [], type: 'baidu', isLoading: true, error: false },
-      { name: '抖音热榜', logoClass: 'douyin-logo', hotList: [], type: 'douyin', isLoading: true, error: false },
-      { name: '知乎热榜', logoClass: 'zhihu-logo', hotList: [], type: 'zhihu', isLoading: true, error: false },
-      { name: 'B站热榜', logoClass: 'bilibili-logo', hotList: [], type: 'bilibili', isLoading: true, error: false },
-      { name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin', isLoading: true, error: false },
-      { name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang', isLoading: true, error: false },
-      { name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba', isLoading: true, error: false },
-      { name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao', isLoading: true, error: false }
-    ]);
+    const {lifeTips} = useLifeTips();
+    const {platforms} = useHotList();
+    const {relaxList} = useRelaxList();
+    const {themeIcon, toggleTheme} = useTheme();
+    const {weather, weatherLink} = useWeather();
 
-    const themeIcon = ref('🌞');
     const hours = ref(0);
     const minutes = ref(0);
     const seconds = ref(0);
@@ -190,57 +236,6 @@ export default {
       document.getElementById('seconds').textContent = seconds.value.toString().padStart(2, '0');
     };
 
-
-    // 切换主题模式
-    const toggleTheme = () => {
-      const body = document.body;
-      const themeIconElement = document.getElementById('theme-icon');
-
-      if (body.classList.contains('dark-theme')) {
-        body.classList.remove('dark-theme');
-        themeIconElement.textContent = '🌞'; // 切换到太阳图标
-        // 保存主题设置到本地存储
-        localStorage.setItem('appTheme', 'light');
-      } else {
-        body.classList.add('dark-theme');
-        themeIconElement.textContent = '🌙'; // 切换到月亮图标
-        // 保存主题设置到本地存储
-        localStorage.setItem('appTheme', 'dark');
-      }
-    };
-
-    // 检查本地存储中的主题设置
-    const checkLocalStorageTheme = () => {
-      const savedTheme = localStorage.getItem('appTheme');
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        document.getElementById('theme-icon').textContent = '🌙';
-      }
-    };
-
-    // 获取热榜数据
-    const loadPlatformData = async (platform) => {
-      try {
-        platform.isLoading = true;
-        const response = await axios.get(`http://117.72.117.19:9782/hotSearch/queryByType/${platform.type}`);
-        platform.hotList = response.data.data;
-        platform.isLoading = false;
-        platform.error = false;
-        console.log(`${platform.name} 数据:`, response.data.data);
-      } catch (error) {
-        platform.isLoading = false;
-        platform.error = true;
-        console.error(`获取${platform.name}数据失败`, error);
-      }
-    };
-
-    // 初始化
-    const init = () => {
-      platforms.value.forEach(platform => {
-        loadPlatformData(platform);
-      });
-    };
-
     // 格式化热榜值
     const formatHotValue = (value) => {
       if (value > 10000) {
@@ -252,118 +247,48 @@ export default {
     // 更新导航栏时间、星期显示
     const updateTime = () => {
       const now = new Date();
-      const beijingTime = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+      const beijingTime = now.toLocaleString('zh-CN', {timeZone: 'Asia/Shanghai'});
       document.getElementById('beijing-time').textContent = `${beijingTime}`;
 
-      const weekDay = now.toLocaleString('zh-CN', { weekday: 'long' });
+      const weekDay = now.toLocaleString('zh-CN', {weekday: 'long'});
       document.getElementById('week-day').textContent = `${weekDay}`;
     };
 
-
-    // 获取用户地理位置
-    const getUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            console.log('获取地理位置成功：', latitude, longitude)
-            // 将经纬度转换为adcode
-            getWeatherByAdcode(latitude, longitude);
-          },
-          error => {
-            console.error('获取地理位置失败', error);
-          }
-        );
-      } else {
-        console.error('浏览器不支持地理位置获取');
-      }
-    };
-
-    // 根据经纬度获取天气
-    const getWeatherByAdcode = (latitude, longitude) => {
-      // 获取adcode
-      axios.get('http://117.72.117.19:9782/Weather/getWeather', {
-        params: {
-          latitude: latitude,
-          longitude: longitude
-        }
-      })
-        .then(response => {
-          console.log('解析返回：', response)
-          const weatherData = response.data.data;
-          // 更新天气显示
-          updateWeatherDisplay(weatherData);
-        })
-    };
-
-    // 更新天气显示
-    const updateWeatherDisplay = (weatherData) => {
-      document.getElementById('weather-city').textContent = weatherData.city;
-      document.getElementById('weather-icon').textContent = getWeatherIcon(weatherData.weather);
-      document.getElementById('weather-condition').textContent = weatherData.weather;
-      document.getElementById('weather-temp').textContent = weatherData.temperature + '℃';
-
-      // 设置跳转链接
-      const weatherLink = document.querySelector('.weather-link');
-      weatherLink.href = `https://tianqi.qq.com/?province=${encodeURIComponent(weatherData.province)}&city=${encodeURIComponent(weatherData.city)}`;
-    };
-
-    // 根据天气获取图标
-    const getWeatherIcon = (weather) => {
-      const weatherIcons = {
-        '晴': '☀️',
-        '多云': '⛅',
-        '阴': '☁️',
-        '小雨': '🌦️',
-        '大雨': '🌧️',
-        '雪': '❄️',
-        '雾': '🌫️',
-        '霾': '🌫️',
-        '雷阵雨': '⛈️',
-        '阵雨': '⛈️',
-      };
-      return weatherIcons[weather] || ''; // 如果没有匹配的图标，返回空字符串
-    };
-
-
     // 在组件挂载后执行
     onMounted(() => {
-      // 页面加载时检查本地存储的主题设置
-      checkLocalStorageTheme();
-      init();
-      updateTime();
+          updateTime();
 
-      // 从本地存储加载下班时间
-      const savedOffTime = localStorage.getItem('offTime');
-      if (savedOffTime) {
-        offTime.value = new Date(savedOffTime);
-        // 更新输入框的值
-        const hours = offTime.value.getHours();
-        const minutes = offTime.value.getMinutes();
-        document.getElementById('offTime').value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-      } else {
-        // 默认下班时间为18:00
-        const now = new Date();
-        offTime.value = new Date(now);
-        offTime.value.setHours(18, 0, 0, 0);
-        if (offTime.value <= now) {
-          offTime.value.setDate(offTime.value.getDate() + 1);
+          // 从本地存储加载下班时间
+          const savedOffTime = localStorage.getItem('offTime');
+          if (savedOffTime) {
+            offTime.value = new Date(savedOffTime);
+            // 更新输入框的值
+            const hours = offTime.value.getHours();
+            const minutes = offTime.value.getMinutes();
+            document.getElementById('offTime').value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+          } else {
+            // 默认下班时间为18:00
+            const now = new Date();
+            offTime.value = new Date(now);
+            offTime.value.setHours(18, 0, 0, 0);
+            if (offTime.value <= now) {
+              offTime.value.setDate(offTime.value.getDate() + 1);
+            }
+            // 更新输入框的值
+            document.getElementById('offTime').value = '18:00';
+          }
+
+          updateCountdown();
+
+          setInterval(updateTime, 1000);
+          setInterval(updateCountdown, 1000);
         }
-        // 更新输入框的值
-        document.getElementById('offTime').value = '18:00';
-      }
-
-      updateCountdown();
-      // 获取用户地理位置并显示天气
-      getUserLocation();
-
-      setInterval(updateTime, 1000);
-      setInterval(updateCountdown, 1000);
-    });
+    )
+    ;
 
     return {
       platforms,
+      lifeTips,
       toggleTheme,
       themeIcon,
       hours,
@@ -371,7 +296,11 @@ export default {
       seconds,
       formatHotValue,
       setOffTime,
+      weather,
+      weatherLink,
+      relaxList
     };
   }
-};
+}
+;
 </script>

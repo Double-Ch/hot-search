@@ -62,6 +62,7 @@ body ::-webkit-scrollbar-thumb {
 .dark-theme .item-title {
     color: #858585; /* 设置热榜内容文字颜色为浅灰色 */
 }
+
 .dark-theme .item-title:hover {
     color: skyblue; /* 热榜项目悬停时 */
 }
@@ -361,6 +362,7 @@ header {
     transition: color 0.5s ease; /* 添加颜色过渡动画 */
 }
 
+/* 必备功能模块样式 */
 .feature-section {
     margin-top: 30px;
 }
@@ -369,7 +371,7 @@ header {
     font-size: 18px;
     font-weight: 600;
     color: #2c3e50;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     padding-bottom: 5px;
     border-bottom: 1px solid #eee;
 }
@@ -400,12 +402,92 @@ header {
     margin-bottom: 15px;
 }
 
-.feature-image {
-    width: 100%;
-    height: 120px;
-    background-color: #f0f0f0;
-    border-radius: 4px;
-    margin-top: 10px;
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    background-color: #fdfdfe;
+    border: 1px solid #fff5f5;
+    box-shadow: 8px 8px 20px rgba(55, 99, 170, 0.1);
+}
+
+.feature-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.feature-icon i {
+    font-size: 20px;
+    color: #3498db;
+}
+
+.feature-icon h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.feature-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 0;
+    text-align: left;
+}
+
+.feature-info h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.feature-info p {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+
+/* 深色主题样式 */
+.dark-theme .feature-card {
+    background-color: #222;
+    border: 1px solid #333;
+}
+
+.dark-theme .feature-item {
+    background-color: #333;
+    border: 1px solid #444;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .feature-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme .feature-icon i {
+    color: #5fb8e5;
+}
+
+.dark-theme .feature-info h4 {
+    color: #b0b0b0;
+}
+
+.dark-theme .feature-info p {
+    color: #95a5a6;
 }
 
 .countdown-container {
@@ -539,4 +621,63 @@ footer {
 
 .toutiao-logo {
     background-image: url('https://www.toutiao.com/favicon.ico');
+}
+
+/* 添加以下样式 */
+.tips-container {
+    margin-top: 10px;
+}
+
+.tip-item {
+    padding: 7px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.tip-item:hover {
+    background-color: #f9f9f9;
+}
+
+.tip-number {
+    width: 20px;
+    margin-right: 10px;
+    color: #999;
+}
+
+.tip-content {
+    flex: 1;
+    font-size: 14px;
+    color: #34495e;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.tip-content:hover {
+    color: skyblue;
+}
+
+.tip-category {
+    padding: 2px 5px;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-left: 10px;
+    color: #7f8c8d;
+}
+
+.tip-likes {
+    margin-left: 10px;
+    cursor: pointer;
+    color: #95a5a6;
+    transition: color 0.3s ease;
+}
+
+.tip-likes:hover {
+    color: #3498db;
+}
+
+.tip-likes i {
+    margin-right: 5px;
 }
