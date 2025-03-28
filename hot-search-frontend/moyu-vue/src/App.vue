@@ -68,8 +68,8 @@
         <h2 class="section-title">必备功能</h2>
         <div class="features">
           <div class="feature-card">
-            <h3 class="feature-title">生活类</h3>
-            <p class="feature-content">分享职场中的有趣经历和故事，增加趣味性和互动性。</p>
+            <h3 class="feature-title">生活服务</h3>
+            <p class="feature-content">提供生活相关的各种实用服务和兴趣交流平台，满足你的日常生活需求和兴趣爱好</p>
             <div class="feature-grid">
               <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in lifeTips" :key="index">
                 <div>
@@ -86,10 +86,10 @@
           </div>
 
           <div class="feature-card">
-            <h3 class="feature-title">职场趣事</h3>
-            <p class="feature-content">分享职场中的有趣经历和故事，增加趣味性和互动性。</p>
+            <h3 class="feature-title">科技快讯</h3>
+            <p class="feature-content">汇聚最新的科技动态、创新资讯和行业趋势，助你掌握科技前沿</p>
             <div class="feature-grid">
-              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in Sciences" :key="index">
                 <div>
                   <div class="feature-icon">
                     <img :src="item.icon">
@@ -105,7 +105,7 @@
 
           <div class="feature-card">
             <h3 class="feature-title">放松时刻</h3>
-            <p class="feature-content">提供轻松的图片、视频或音乐，帮助你在工作间隙放松心情。</p>
+            <p class="feature-content">提供丰富的娱乐资源和放松方式，帮助你在闲暇时光放松身心，享受生活</p>
             <div class="feature-grid">
               <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in relaxList" :key="index">
                 <div>
@@ -122,10 +122,10 @@
           </div>
 
           <div class="feature-card">
-            <h3 class="feature-title">摸鱼工具</h3>
-            <p class="feature-content">各种实用的摸鱼小工具，让你的工作时间更加轻松愉快。</p>
+            <h3 class="feature-title">实用工具</h3>
+            <p class="feature-content">集合多种实用工具，提升工作与生活的效率，让日常任务更加便捷</p>
             <div class="feature-grid">
-              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in lifeTips" :key="index">
+              <a :href="item.url" target="_blank" class="feature-item" v-for="(item, index) in utils" :key="index">
                 <div>
                   <div class="feature-icon">
                     <img :src="item.icon">
@@ -168,13 +168,13 @@
 
     <footer>
       <div class="footer-content">
-        <div class="footer-links">
-          <a href="#" class="footer-link">关于我们</a>
-          <a href="#" class="footer-link">使用条款</a>
-          <a href="#" class="footer-link">隐私政策</a>
-          <a href="#" class="footer-link">联系我们</a>
-        </div>
-        <p class="footer-text">© 2025 摸鱼驿站 - 打工人的小确幸</p>
+<!--        <div class="footer-links">-->
+<!--          <a href="#" class="footer-link">关于我们</a>-->
+<!--          <a href="#" class="footer-link">使用条款</a>-->
+<!--          <a href="#" class="footer-link">隐私政策</a>-->
+<!--          <a href="#" class="footer-link">联系我们</a>-->
+<!--        </div>-->
+        <p class="footer-text">© 2025 职场小站 - 打工人的小确幸 <a href="http://beian.miit.gov.cn/" target="_blank" style="text-decoration: none" class="footer-text"> 蜀ICP备2025131520号 </a> </p>
       </div>
     </footer>
   </div>
@@ -184,15 +184,19 @@
 import {ref, onMounted} from 'vue';
 import {useLifeTips} from './composables/useLifeTips.js'
 import {useRelaxList} from './composables/useRelax.js'
+import {useUtils} from './composables/useUtils.js'
+import {useSciences} from './composables/useSciences.js'
 import {useHotList} from './composables/useHotList';
 import {useTheme} from './composables/useTheme.js';
 import {useWeather} from './composables/useWeather.js';
 
 export default {
   setup() {
+    const {utils} = useUtils();
     const {lifeTips} = useLifeTips();
     const {platforms} = useHotList();
     const {relaxList} = useRelaxList();
+    const {Sciences} = useSciences();
     const {themeIcon, toggleTheme} = useTheme();
     const {weather, weatherLink} = useWeather();
 
@@ -298,7 +302,9 @@ export default {
       setOffTime,
       weather,
       weatherLink,
-      relaxList
+      relaxList,
+      Sciences,
+      utils,
     };
   }
 }

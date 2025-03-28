@@ -3,7 +3,6 @@ package com.itchen.controller.hot;
 import com.itchen.common.Result;
 import com.itchen.domain.entity.Weather;
 import com.itchen.service.WeatherService;
-import com.itchen.utils.LocationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;

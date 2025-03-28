@@ -33,7 +33,7 @@ export function useWeather() {
   // 根据经纬度获取天气
   const getWeatherByAdcode = (latitude, longitude) => {
     // 获取adcode
-    axios.get('http://117.72.117.19:9782/Weather/getWeather', {
+    axios.get('/Weather/getWeather', {
       params: {
         latitude: latitude,
         longitude: longitude
