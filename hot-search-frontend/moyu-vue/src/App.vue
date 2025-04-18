@@ -144,9 +144,19 @@
       <div class="countdown-container">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h3 class="countdown-title">下班倒计时</h3>
-          <div style="display: flex; align-items: center;">
-            <input type="time" v-model="offTimeInput" class="time-input" style="margin-right: 10px;">
-            <button @click="setOffTime">设置下班时间</button>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="preset-times">
+              <button 
+                v-for="preset in presetTimes" 
+                :key="preset.value"
+                @click="offTimeInput = preset.value; setOffTime()"
+                class="preset-time-btn"
+              >
+                {{ preset.label }}
+              </button>
+            </div>
+            <input type="time" v-model="offTimeInput" class="time-input">
+            <button @click="setOffTime" class="set-time-btn">设置</button>
           </div>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
@@ -189,6 +199,7 @@ import {useSciences} from './composables/useSciences.js'
 import {useHotList} from './composables/useHotList';
 import {useTheme} from './composables/useTheme.js';
 import {useWeather} from './composables/useWeather.js';
+import {useCountdown} from './composables/useCountdown.js';
 
 export default {
   setup() {
@@ -199,63 +210,14 @@ export default {
     const {Sciences} = useSciences();
     const {themeIcon, toggleTheme} = useTheme();
     const {weather, weatherLink} = useWeather();
-
-    const hours = ref(0);
-    const minutes = ref(0);
-    const seconds = ref(0);
-    const offTime = ref(new Date());
-    const offTimeInput = ref('18:00');
-
-    // 格式化显示的时间
-    const formattedHours = computed(() => hours.value.toString().padStart(2, '0'));
-    const formattedMinutes = computed(() => minutes.value.toString().padStart(2, '0'));
-    const formattedSeconds = computed(() => seconds.value.toString().padStart(2, '0'));
-
-    // 初始化下班时间
-    const initOffTime = () => {
-      const savedTime = localStorage.getItem('offTime');
-      if (savedTime) {
-        offTime.value = new Date(savedTime);
-        offTimeInput.value = `${offTime.value.getHours().toString().padStart(2, '0')}:${offTime.value.getMinutes().toString().padStart(2, '0')}`;
-      } else {
-        const now = new Date();
-        offTime.value = new Date(now);
-        offTime.value.setHours(18, 0, 0, 0);
-        if (offTime.value <= now) {
-          offTime.value.setDate(offTime.value.getDate() + 1);
-        }
-        localStorage.setItem('offTime', offTime.value.toISOString());
-      }
-      updateCountdown();
-    };
-
-    // 设置下班时间
-    const setOffTime = () => {
-      const [hoursInput, minutesInput] = offTimeInput.value.split(':').map(Number);
-      const now = new Date();
-      offTime.value = new Date(now);
-      offTime.value.setHours(hoursInput, minutesInput, 0, 0);
-      if (offTime.value <= now) {
-        offTime.value.setDate(offTime.value.getDate() + 1);
-      }
-      localStorage.setItem('offTime', offTime.value.toISOString());
-      updateCountdown();
-    };
-
-    // 更新倒计时
-    const updateCountdown = () => {
-      const now = new Date();
-      const workEndTime = offTime.value;
-      if (now > workEndTime) {
-        offTime.value.setDate(offTime.value.getDate() + 1);
-        localStorage.setItem('offTime', offTime.value.toISOString());
-      }
-      const timeDifference = workEndTime - now;
-
-      hours.value = Math.floor(timeDifference / (1000 * 60 * 60));
-      minutes.value = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      seconds.value = Math.floor((timeDifference % (1000 * 60)) / 1000);
-    };
+    const {
+      offTimeInput,
+      formattedHours,
+      formattedMinutes,
+      formattedSeconds,
+      setOffTime,
+      presetTimes
+    } = useCountdown();
 
     // 格式化热榜值
     const formatHotValue = (value) => {
@@ -277,16 +239,9 @@ export default {
 
     // 在组件挂载后执行
     onMounted(() => {
-          updateTime();
-
-          // 从本地存储加载下班时间
-          initOffTime();
-
-          setInterval(updateTime, 1000);
-          setInterval(updateCountdown, 1000);
-        }
-    )
-    ;
+      updateTime();
+      setInterval(updateTime, 1000);
+    });
 
     return {
       platforms,
@@ -304,8 +259,49 @@ export default {
       Sciences,
       utils,
       offTimeInput,
+      presetTimes
     };
   }
 }
-;
 </script>
+
+<style>
+/* 添加新的样式 */
+.preset-times {
+  display: flex;
+  gap: 5px;
+}
+
+.preset-time-btn {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.preset-time-btn:hover {
+  background: #e0e0e0;
+}
+
+.set-time-btn {
+  padding: 5px 15px;
+  border: none;
+  border-radius: 4px;
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.set-time-btn:hover {
+  background: #2980b9;
+}
+
+.time-input {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+</style>
