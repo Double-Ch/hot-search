@@ -11,11 +11,21 @@
           </div>
 
           <!-- 天气显示 -->
-          <a :href="weatherLink" target="_blank" class="weather-link">
-            <span id="weather-city">{{ weather.city }}</span>
-            <span id="weather-icon">{{ weather.icon }}</span>
-            <span id="weather-condition">{{ weather.condition }}</span>
-            <span id="weather-temp">{{ weather.temperature }}℃</span>
+          <a :href="weatherLink" target="_blank" class="weather-link" :class="{ 'loading': weatherLoading, 'error': weatherError }">
+            <template v-if="weatherLoading">
+              <span class="loading-spinner"></span>
+              <span>加载中...</span>
+            </template>
+            <template v-else-if="weatherError">
+              <span class="error-icon">⚠️</span>
+              <span>{{ weatherError }}</span>
+            </template>
+            <template v-else>
+              <span id="weather-city">{{ weather.city }}</span>
+              <span id="weather-icon">{{ weather.icon }}</span>
+              <span id="weather-condition">{{ weather.condition }}</span>
+              <span id="weather-temp">{{ weather.temperature }}℃</span>
+            </template>
           </a>
 
           <div class="date-time">
@@ -209,7 +219,7 @@ export default {
     const {relaxList} = useRelaxList();
     const {Sciences} = useSciences();
     const {themeIcon, toggleTheme} = useTheme();
-    const {weather, weatherLink} = useWeather();
+    const {weather, weatherLink, isLoading: weatherLoading, error: weatherError} = useWeather();
     const {
       offTimeInput,
       formattedHours,
@@ -255,6 +265,8 @@ export default {
       setOffTime,
       weather,
       weatherLink,
+      weatherLoading,
+      weatherError,
       relaxList,
       Sciences,
       utils,
@@ -303,5 +315,47 @@ export default {
   padding: 5px;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+.weather-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: inherit;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.weather-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.weather-link.loading {
+  opacity: 0.7;
+}
+
+.weather-link.error {
+  color: #e74c3c;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-icon {
+  margin-right: 5px;
 }
 </style>
