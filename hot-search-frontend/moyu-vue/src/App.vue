@@ -145,21 +145,21 @@
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <h3 class="countdown-title">下班倒计时</h3>
           <div style="display: flex; align-items: center;">
-            <input type="time" class="time-input" id="offTime" value="18:00" style="margin-right: 10px;">
+            <input type="time" v-model="offTimeInput" class="time-input" style="margin-right: 10px;">
             <button @click="setOffTime">设置下班时间</button>
           </div>
         </div>
         <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
           <div class="countdown-item">
-            <div class="countdown-value" id="hours">0</div>
+            <div class="countdown-value">{{ formattedHours }}</div>
             <div class="countdown-label">小时</div>
           </div>
           <div class="countdown-item">
-            <div class="countdown-value" id="minutes">0</div>
+            <div class="countdown-value">{{ formattedMinutes }}</div>
             <div class="countdown-label">分钟</div>
           </div>
           <div class="countdown-item">
-            <div class="countdown-value" id="seconds">0</div>
+            <div class="countdown-value">{{ formattedSeconds }}</div>
             <div class="countdown-label">秒</div>
           </div>
         </div>
@@ -181,7 +181,7 @@
 </template>
 
 <script>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import {useLifeTips} from './composables/useLifeTips.js'
 import {useRelaxList} from './composables/useRelax.js'
 import {useUtils} from './composables/useUtils.js'
@@ -203,22 +203,42 @@ export default {
     const hours = ref(0);
     const minutes = ref(0);
     const seconds = ref(0);
-    let offTime = ref(new Date());
+    const offTime = ref(new Date());
+    const offTimeInput = ref('18:00');
+
+    // 格式化显示的时间
+    const formattedHours = computed(() => hours.value.toString().padStart(2, '0'));
+    const formattedMinutes = computed(() => minutes.value.toString().padStart(2, '0'));
+    const formattedSeconds = computed(() => seconds.value.toString().padStart(2, '0'));
+
+    // 初始化下班时间
+    const initOffTime = () => {
+      const savedTime = localStorage.getItem('offTime');
+      if (savedTime) {
+        offTime.value = new Date(savedTime);
+        offTimeInput.value = `${offTime.value.getHours().toString().padStart(2, '0')}:${offTime.value.getMinutes().toString().padStart(2, '0')}`;
+      } else {
+        const now = new Date();
+        offTime.value = new Date(now);
+        offTime.value.setHours(18, 0, 0, 0);
+        if (offTime.value <= now) {
+          offTime.value.setDate(offTime.value.getDate() + 1);
+        }
+        localStorage.setItem('offTime', offTime.value.toISOString());
+      }
+      updateCountdown();
+    };
 
     // 设置下班时间
     const setOffTime = () => {
-      const timeInput = document.getElementById('offTime').value;
-      const [hoursInput, minutesInput] = timeInput.split(':').map(Number);
+      const [hoursInput, minutesInput] = offTimeInput.value.split(':').map(Number);
       const now = new Date();
       offTime.value = new Date(now);
       offTime.value.setHours(hoursInput, minutesInput, 0, 0);
       if (offTime.value <= now) {
         offTime.value.setDate(offTime.value.getDate() + 1);
       }
-      // 保存到本地存储
       localStorage.setItem('offTime', offTime.value.toISOString());
-      // 更新输入框的值
-      document.getElementById('offTime').value = timeInput;
       updateCountdown();
     };
 
@@ -228,16 +248,13 @@ export default {
       const workEndTime = offTime.value;
       if (now > workEndTime) {
         offTime.value.setDate(offTime.value.getDate() + 1);
+        localStorage.setItem('offTime', offTime.value.toISOString());
       }
       const timeDifference = workEndTime - now;
 
       hours.value = Math.floor(timeDifference / (1000 * 60 * 60));
       minutes.value = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
       seconds.value = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-      document.getElementById('hours').textContent = hours.value.toString().padStart(2, '0');
-      document.getElementById('minutes').textContent = minutes.value.toString().padStart(2, '0');
-      document.getElementById('seconds').textContent = seconds.value.toString().padStart(2, '0');
     };
 
     // 格式化热榜值
@@ -263,26 +280,7 @@ export default {
           updateTime();
 
           // 从本地存储加载下班时间
-          const savedOffTime = localStorage.getItem('offTime');
-          if (savedOffTime) {
-            offTime.value = new Date(savedOffTime);
-            // 更新输入框的值
-            const hours = offTime.value.getHours();
-            const minutes = offTime.value.getMinutes();
-            document.getElementById('offTime').value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-          } else {
-            // 默认下班时间为18:00
-            const now = new Date();
-            offTime.value = new Date(now);
-            offTime.value.setHours(18, 0, 0, 0);
-            if (offTime.value <= now) {
-              offTime.value.setDate(offTime.value.getDate() + 1);
-            }
-            // 更新输入框的值
-            document.getElementById('offTime').value = '18:00';
-          }
-
-          updateCountdown();
+          initOffTime();
 
           setInterval(updateTime, 1000);
           setInterval(updateCountdown, 1000);
@@ -295,9 +293,9 @@ export default {
       lifeTips,
       toggleTheme,
       themeIcon,
-      hours,
-      minutes,
-      seconds,
+      formattedHours,
+      formattedMinutes,
+      formattedSeconds,
       formatHotValue,
       setOffTime,
       weather,
@@ -305,6 +303,7 @@ export default {
       relaxList,
       Sciences,
       utils,
+      offTimeInput,
     };
   }
 }
