@@ -613,6 +613,22 @@ footer {
     background-image: url('https://www.toutiao.com/favicon.ico');
 }
 
+.csdn-logo {
+    background-image: url('https://blog.csdn.net/favicon.ico');
+}
+
+.weibo-logo {
+    background-image: url('https://s.weibo.com/favicon.ico');
+}
+
+.hupu-logo {
+    background-image: url('https://bbs.hupu.com/favicon.ico');
+}
+
+.sougou-logo {
+    background-image: url('https://www.sogou.com/favicon.ico');
+}
+
 /* 热搜数据加载中和获取错误的样式 */
 .loading {
     display: flex;

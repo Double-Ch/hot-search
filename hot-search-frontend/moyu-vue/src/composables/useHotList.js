@@ -10,7 +10,11 @@ export function useHotList() {
     { name: '掘金热榜', logoClass: 'juejin-logo', hotList: [], type: 'juejin', isLoading: true, error: false },
     { name: '腾讯网热榜', logoClass: 'tengxunwang-logo', hotList: [], type: 'tengxunwang', isLoading: true, error: false },
     { name: '贴吧热榜', logoClass: 'tieba-logo', hotList: [], type: 'tieba', isLoading: true, error: false },
-    { name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao', isLoading: true, error: false }
+    { name: '头条热榜', logoClass: 'toutiao-logo', hotList: [], type: 'toutiao', isLoading: true, error: false },
+    { name: '微博热榜', logoClass: 'weibo-logo', hotList: [], type: 'weibo', isLoading: true, error: false },
+    { name: 'CSDN热榜', logoClass: 'csdn-logo', hotList: [], type: 'csdn', isLoading: true, error: false },
+    { name: '搜狗热榜', logoClass: 'sougou-logo', hotList: [], type: 'sougou', isLoading: true, error: false },
+    { name: '虎扑步行街热榜', logoClass: 'hupu-logo', hotList: [], type: 'hupu', isLoading: true, error: false }
   ]);
 
   const loadPlatformData = (platform) => {

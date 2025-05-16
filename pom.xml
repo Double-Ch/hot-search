@@ -10,7 +10,7 @@
 
     <groupId>com.itchen</groupId>
     <artifactId>hotsearch</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>hotsearch</name>
@@ -49,6 +49,13 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
+        </dependency>
+
+        <!--从网页中提取结构化数据（如标题、链接、内容等）-->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.15.3</version>
         </dependency>
 
         <!--aop-->

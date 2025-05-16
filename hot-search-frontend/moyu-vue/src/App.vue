@@ -6,27 +6,27 @@
           <div class="logo">
             <a href="#" style="text-decoration: none; display: flex; align-items: center;">
               <i class="fas fa-fish" style="font-size: 24px; color: #3498db; margin-right: 5px"></i>
-              <h1>职场小站</h1>
+              <h1>摸鱼驿站</h1>
             </a>
           </div>
 
           <!-- 天气显示 -->
-          <a :href="weatherLink" target="_blank" class="weather-link" :class="{ 'loading': weatherLoading, 'error': weatherError }">
-            <template v-if="weatherLoading">
-              <span class="loading-spinner"></span>
-              <span>加载中...</span>
-            </template>
-            <template v-else-if="weatherError">
-              <span class="error-icon">⚠️</span>
-              <span>{{ weatherError }}</span>
-            </template>
-            <template v-else>
-              <span id="weather-city">{{ weather.city }}</span>
-              <span id="weather-icon">{{ weather.icon }}</span>
-              <span id="weather-condition">{{ weather.condition }}</span>
-              <span id="weather-temp">{{ weather.temperature }}℃</span>
-            </template>
-          </a>
+<!--          <a :href="weatherLink" target="_blank" class="weather-link" :class="{ 'loading': weatherLoading, 'error': weatherError }">-->
+<!--            <template v-if="weatherLoading">-->
+<!--              <span class="loading-spinner"></span>-->
+<!--              <span>加载中...</span>-->
+<!--            </template>-->
+<!--            <template v-else-if="weatherError">-->
+<!--              <span class="error-icon">⚠️</span>-->
+<!--              <span>{{ weatherError }}</span>-->
+<!--            </template>-->
+<!--            <template v-else>-->
+<!--              <span id="weather-city">{{ weather.city }}</span>-->
+<!--              <span id="weather-icon">{{ weather.icon }}</span>-->
+<!--              <span id="weather-condition">{{ weather.condition }}</span>-->
+<!--              <span id="weather-temp">{{ weather.temperature }}℃</span>-->
+<!--            </template>-->
+<!--          </a>-->
 
           <div class="date-time">
             <span id="beijing-time"></span>
@@ -194,7 +194,7 @@
 <!--          <a href="#" class="footer-link">隐私政策</a>-->
 <!--          <a href="#" class="footer-link">联系我们</a>-->
 <!--        </div>-->
-        <p class="footer-text">© 2025 职场小站 - 打工人的小确幸 <a href="http://beian.miit.gov.cn/" target="_blank" style="text-decoration: none" class="footer-text"> 蜀ICP备2025131520号 </a> </p>
+        <p class="footer-text">© 2025 摸鱼驿站 - 打工人的小确幸 <a href="http://beian.miit.gov.cn/" target="_blank" style="text-decoration: none" class="footer-text"> 蜀ICP备2025131520号 </a> </p>
       </div>
     </footer>
   </div>
