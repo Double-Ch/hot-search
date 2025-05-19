@@ -46,14 +46,14 @@ public class HuPuDataSource implements HotDataSource {
                     .get();
 
             // 元素列表 根据.class类名选择
-            Elements items = doc.select(".t-info");
+            Elements items = doc.select(".bbs-sl-web-post-body");
 
             HotSearchVo hotSearchVo;
             List<HotSearchVo> hotSearchVoList = new ArrayList<>(items.size());
 
             for (int i = 0; i < items.size(); i++) {
                 // 文章标题
-                String title = items.get(i).select(".t-title").text();
+                String title = items.get(i).select(".p-title").text();
                 // 文章id
                 String relativeLink = items.get(i).selectFirst("a").attr("href");
                 // 文章url
