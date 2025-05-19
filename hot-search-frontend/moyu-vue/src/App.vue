@@ -197,6 +197,8 @@
         <p class="footer-text">© 2025 摸鱼驿站 - 打工人的小确幸 <a href="http://beian.miit.gov.cn/" target="_blank" style="text-decoration: none" class="footer-text"> 蜀ICP备2025131520号 </a> </p>
       </div>
     </footer>
+
+    <FeedbackButton />
   </div>
 </template>
 
@@ -210,8 +212,12 @@ import {useHotList} from './composables/useHotList';
 import {useTheme} from './composables/useTheme.js';
 import {useWeather} from './composables/useWeather.js';
 import {useCountdown} from './composables/useCountdown.js';
+import FeedbackButton from './components/FeedbackButton.vue'
 
 export default {
+  components: {
+    FeedbackButton
+  },
   setup() {
     const {utils} = useUtils();
     const {lifeTips} = useLifeTips();
