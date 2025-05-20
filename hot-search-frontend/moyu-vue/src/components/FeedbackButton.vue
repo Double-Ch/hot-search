@@ -11,7 +11,7 @@
 
   <!-- 意见反馈弹窗 -->
   <el-dialog  title="意见反馈" v-model="dialogVisible" width="30%" :show-close="false" :modal="true" :close-on-click-modal="false"
-    :before-close="handleClose">
+    :before-close="handleClose" :lock-scroll="false">
     <div class="dialog-content">
       <el-form :model="feedbackForm" label-width="80px">
         <el-form-item label="反馈内容" required>
@@ -62,7 +62,7 @@ const submitFeedback = async () => {
   }
 
   try {
-    await axios.post('/feedback', feedbackForm)
+    await axios.post('/feedback/save', feedbackForm)
     ElMessage.success('感谢您的反馈！')
     handleClose()
   } catch (error) {
