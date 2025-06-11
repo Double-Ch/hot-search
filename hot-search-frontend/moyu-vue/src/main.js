@@ -7,7 +7,6 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 // 配置 axios 基础路径
-// axios.defaults.baseURL = 'https://www.hotsearch.fun:9782';
 axios.defaults.baseURL = 'https://hotsearch.fun/api';
 // axios.defaults.baseURL = 'http://localhost:8089';
 
