@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author chen
  * @description 返回给前端的热搜数据
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HotSearchVo {
+public class HotSearchVo implements Serializable {
 //    @Schema(description = "热搜ID")
 //    private Integer htoId;
 

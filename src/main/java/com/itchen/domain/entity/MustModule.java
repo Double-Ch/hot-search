@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author chen
  * @description 必备功能模块实体类
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @TableName("must_module_tbl")
-public class MustModule {
+public class MustModule implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(description = "主键ID")
     private Integer id;
@@ -35,6 +37,4 @@ public class MustModule {
 
     @Schema(description = "跳转地址")
     private String url;
-
-
 }

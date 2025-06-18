@@ -12,9 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -27,13 +29,23 @@ import java.util.List;
 public class HuPuDataSource implements HotDataSource {
 
     private final PlatformService platformService;
+    private final RedisTemplate redisTemplate;
 
-    public HuPuDataSource(PlatformService platformService) {
+    public HuPuDataSource(PlatformService platformService, RedisTemplate redisTemplate) {
         this.platformService = platformService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public List<HotSearchVo> getHotSearch(String type) throws Exception {
+        // 先查询redis
+        List<HotSearchVo> hotSearchVoListByRedis = (List<HotSearchVo>) redisTemplate.opsForHash().get("hot-search", type);
+        if (hotSearchVoListByRedis != null) {
+            log.info("从redis中获取: {}数据成功", type);
+            return hotSearchVoListByRedis;
+        }
+
+        log.info("从redis中获取: {}数据失败,开始拉取", type);
         Platform platform = platformService.getOne(new QueryWrapper<Platform>().eq("name", type));
         if (platform == null) {
             throw new CustomException(ErrorCode.NOT_FOUND_ERROR);
@@ -66,6 +78,9 @@ public class HuPuDataSource implements HotDataSource {
                         .build();
                 hotSearchVoList.add(hotSearchVo);
             }
+            HashMap<String, List<HotSearchVo>> hashMap = new HashMap<>();
+            hashMap.put(type, hotSearchVoList);
+            redisTemplate.opsForHash().put("hot-search", type, hotSearchVoList);
             return hotSearchVoList;
         } catch (HttpException e) {
             log.error("请求url失败,{}", platform.getApiUrl());

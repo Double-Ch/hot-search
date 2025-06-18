@@ -12,10 +12,13 @@ import com.itchen.domain.entity.Platform;
 import com.itchen.domain.vo.HotSearchVo;
 import com.itchen.service.PlatformService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.itchen.constant.HotConstant.BAI_DU_ICON;
 
@@ -28,13 +31,23 @@ import static com.itchen.constant.HotConstant.BAI_DU_ICON;
 public class BaiDuDataSource implements HotDataSource {
 
     private final PlatformService platformService;
+    private final RedisTemplate redisTemplate;
 
-    public BaiDuDataSource(PlatformService platformService) {
+    public BaiDuDataSource(PlatformService platformService, RedisTemplate redisTemplate) {
         this.platformService = platformService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public List<HotSearchVo> getHotSearch(String type) throws Exception {
+        // 先查询redis
+        List<HotSearchVo> hotSearchVoListByRedis = (List<HotSearchVo>) redisTemplate.opsForHash().get("hot-search", type);
+        if (hotSearchVoListByRedis != null) {
+            log.info("从redis中获取: {}数据成功", type);
+            return hotSearchVoListByRedis;
+        }
+
+        log.info("从redis中获取: {}数据失败,开始拉取", type);
         Platform platform = platformService.getOne(new QueryWrapper<Platform>().eq("name", type));
         if (platform == null) {
             throw new CustomException(ErrorCode.NOT_FOUND_ERROR);
@@ -92,6 +105,10 @@ public class BaiDuDataSource implements HotDataSource {
                 log.error("数据解析失败,{}", response);
                 throw new CustomException("数据解析失败");
             }
+            HashMap<String, List<HotSearchVo>> hashMap = new HashMap<>();
+            hashMap.put(type, hotSearchVoList);
+            redisTemplate.opsForHash().put("hot-search", type, hotSearchVoList);
+            redisTemplate.expire("hot-search", 10, TimeUnit.MINUTES);
             return hotSearchVoList;
         } catch (HttpException e) {
             log.error("请求url失败,{}", platform.getApiUrl() + "?" + platform.getApiParams());

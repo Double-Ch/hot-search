@@ -13,9 +13,11 @@ import com.itchen.domain.entity.Platform;
 import com.itchen.domain.vo.HotSearchVo;
 import com.itchen.service.PlatformService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -31,13 +33,23 @@ public class WeiBoDataSource implements HotDataSource {
     private static final Set<Integer> RETRY_STATUS_CODES = Set.of(502, 503, 504); // 需重试的状态码
 
     private final PlatformService platformService;
+    private final RedisTemplate redisTemplate;
 
-    public WeiBoDataSource(PlatformService platformService) {
+    public WeiBoDataSource(PlatformService platformService, RedisTemplate redisTemplate) {
         this.platformService = platformService;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public List<HotSearchVo> getHotSearch(String type) {
+        // 先查询redis
+        List<HotSearchVo> hotSearchVoListByRedis = (List<HotSearchVo>) redisTemplate.opsForHash().get("hot-search", type);
+        if (hotSearchVoListByRedis != null) {
+            log.info("从redis中获取: {}数据成功", type);
+            return hotSearchVoListByRedis;
+        }
+
+        log.info("从redis中获取: {}数据失败,开始拉取", type);
         Platform platform = platformService.getOne(new QueryWrapper<Platform>().eq("name", type));
         if (platform == null) {
             throw new CustomException(ErrorCode.NOT_FOUND_ERROR);
@@ -98,6 +110,9 @@ public class WeiBoDataSource implements HotDataSource {
                         .build();
                 hotSearchList.add(vo);
             }
+            HashMap<String, List<HotSearchVo>> hashMap = new HashMap<>();
+            hashMap.put("weibo", hotSearchList);
+            redisTemplate.opsForHash().put("hot-search", "weibo", hotSearchList);
             return hotSearchList;
         } catch (Exception e) {
             log.error("数据解析失败，原始响应: {}", responseBody);

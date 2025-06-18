@@ -26,9 +26,9 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping("getWeather")
-    @Operation(summary = "获取天气信息")
-    public Result<Weather> getWeather(double latitude, double longitude) {
-        return Result.success(weatherService.getWeather(latitude, longitude));
-    }
+//    @GetMapping("getWeather")
+//    @Operation(summary = "获取天气信息")
+//    public Result<Weather> getWeather(double latitude, double longitude) {
+//        return Result.success(weatherService.getWeather(latitude, longitude));
+//    }
 }
